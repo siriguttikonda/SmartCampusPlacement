@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Company Dashboard | Smart Campus</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f6f8fb;
+            color: #263247;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+
+        .sidebar {
+            width: 245px;
+            background: #ffffff;
+            border-right: 1px solid #e9edf3;
+            padding: 26px 18px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .brand {
+            padding: 0 12px 28px;
+        }
+
+        .brand h2 {
+            font-size: 19px;
+            color: #27364d;
+            letter-spacing: -0.3px;
+        }
+
+        .brand span {
+            display: block;
+            margin-top: 4px;
+            font-size: 11px;
+            color: #9aa4b3;
+            letter-spacing: 0.4px;
+        }
+
+        .nav-title {
+            padding: 0 12px;
+            margin-bottom: 9px;
+            font-size: 10px;
+            color: #a0a9b7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #69758a;
+            padding: 11px 12px;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .nav a:hover,
+        .nav a.active {
+            background: #eef4ff;
+            color: #4776c8;
+        }
+
+        .logout {
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            bottom: 22px;
+        }
+
+        .logout a {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            padding: 10px;
+            border: 1px solid #e7ebf1;
+            border-radius: 9px;
+            color: #7c8798;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .logout a:hover {
+            background: #fafbfc;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .main {
+            margin-left: 245px;
+            width: calc(100% - 245px);
+            padding: 32px 36px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .welcome h1 {
+            font-size: 25px;
+            color: #27364d;
+            margin-bottom: 6px;
+        }
+
+        .welcome p {
+            font-size: 13px;
+            color: #8b95a5;
+        }
+
+        .company-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            border: 1px solid #e9edf3;
+            padding: 8px 13px;
+            border-radius: 10px;
+        }
+
+        .company-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            background: #eef4ff;
+            color: #4776c8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .company-info strong {
+            display: block;
+            font-size: 12px;
+            color: #445269;
+        }
+
+        .company-info span {
+            display: block;
+            margin-top: 2px;
+            font-size: 10px;
+            color: #9ba4b1;
+        }
+
+        /* =========================
+           STAT CARDS
+        ========================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 17px;
+            margin-bottom: 22px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid #e9edf3;
+            border-radius: 12px;
+            padding: 19px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #929cab;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+        }
+
+        .stat-number {
+            margin-top: 10px;
+            font-size: 25px;
+            font-weight: 700;
+            color: #344258;
+        }
+
+        .stat-note {
+            margin-top: 5px;
+            font-size: 11px;
+            color: #a0a9b6;
+        }
+
+        /* =========================
+           CONTENT GRID
+        ========================= */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.55fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e9edf3;
+            border-radius: 12px;
+            padding: 21px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 19px;
+        }
+
+        .card-header h3 {
+            font-size: 15px;
+            color: #344258;
+        }
+
+        .card-header span {
+            font-size: 11px;
+            color: #9aa4b2;
+        }
+
+        /* =========================
+           PIPELINE
+        ========================= */
+
+        .pipeline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            padding: 12px 0;
+        }
+
+        .pipeline-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .pipeline-number {
+            font-size: 22px;
+            font-weight: 700;
+            color: #46556c;
+        }
+
+        .pipeline-label {
+            margin-top: 5px;
+            font-size: 10px;
+            color: #99a3b1;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .pipeline-arrow {
+            color: #c2c9d3;
+            font-size: 14px;
+        }
+
+        /* =========================
+           JOB LIST
+        ========================= */
+
+        .job-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .job {
+            border: 1px solid #edf0f4;
+            border-radius: 9px;
+            padding: 13px 14px;
+        }
+
+        .job-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .job-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #46546a;
+        }
+
+        .job-location {
+            margin-top: 4px;
+            font-size: 11px;
+            color: #9ba4b2;
+        }
+
+        .job-status {
+            font-size: 10px;
+            color: #6383b4;
+            background: #eef4ff;
+            padding: 5px 8px;
+            border-radius: 6px;
+            height: fit-content;
+        }
+
+        /* =========================
+           PROFILE
+        ========================= */
+
+        .profile-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
+
+        .profile-row:last-child {
+            border-bottom: none;
+        }
+
+        .profile-label {
+            font-size: 11px;
+            color: #9ba4b1;
+        }
+
+        .profile-value {
+            font-size: 12px;
+            font-weight: 600;
+            color: #536076;
+            text-align: right;
+        }
+
+        /* =========================
+           EMPTY STATE
+        ========================= */
+
+        .empty {
+            text-align: center;
+            padding: 28px 10px;
+            color: #9ba4b2;
+            font-size: 12px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 760px) {
+
+            .sidebar {
+                position: static;
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e9edf3;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            .logout {
+                position: static;
+                margin-top: 20px;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 25px 18px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                gap: 15px;
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .pipeline {
+                flex-wrap: wrap;
+            }
+
+            .pipeline-item {
+                min-width: 45%;
+            }
+
+            .pipeline-arrow {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <h2>Smart Campus</h2>
+            <span>Company Portal</span>
+        </div>
+
+        <div class="nav-title">
+            Recruitment
+        </div>
+
+        <nav class="nav">
+
+            <a href="{{ url_for('company.dashboard') }}"
+               class="active">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('company.jobs') }}">
+                 Jobs
+            </a>
+
+            <a href="{{ url_for('company.candidates') }}">
+    Candidates
+</a>
+
+            <a href="{{ url_for('company.interviews') }}">
+                Interviews
+            </a>
+
+            <a href="{{ url_for('company.profile') }}">
+                Company Profile
+            </a>
+
+        </nav>
+
+        <div class="logout">
+            <a href="{{ url_for('auth.logout') }}">
+                Logout
+            </a>
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main">
+
+        <!-- TOP BAR -->
+
+        <div class="topbar">
+
+            <div class="welcome">
+
+                <h1>
+                    Welcome back, {{ company.company_name }}
+                </h1>
+
+                <p>
+                    Manage recruitment and track your campus hiring activity.
+                </p>
+
+            </div>
+
+            <div class="company-badge">
+
+                <div class="company-avatar">
+                    {{ company.company_name[0]|upper }}
+                </div>
+
+                <div class="company-info">
+
+                    <strong>
+                        {{ company.company_name }}
+                    </strong>
+
+                    <span>
+                        Company Account
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- STAT CARDS -->
+
+        <section class="stats">
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Jobs Posted
+                </div>
+
+                <div class="stat-number">
+                    {{ total_jobs }}
+                </div>
+
+                <div class="stat-note">
+                    Total recruitment opportunities
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Applications
+                </div>
+
+                <div class="stat-number">
+                    {{ total_applications }}
+                </div>
+
+                <div class="stat-note">
+                    Applications received
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Shortlisted
+                </div>
+
+                <div class="stat-number">
+                    {{ shortlisted_candidates }}
+                </div>
+
+                <div class="stat-note">
+                    Candidates shortlisted
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Selected
+                </div>
+
+                <div class="stat-number">
+                    {{ selected_candidates }}
+                </div>
+
+                <div class="stat-note">
+                    Candidates selected
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONTENT -->
+
+        <section class="content-grid">
+
+            <!-- RECRUITMENT PIPELINE -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>
+                        Recruitment Pipeline
+                    </h3>
+
+                    <span>
+                        Current hiring activity
+                    </span>
+
+                </div>
+
+                <div class="pipeline">
+
+                    <div class="pipeline-item">
+
+                        <div class="pipeline-number">
+                            {{ total_applications }}
+                        </div>
+
+                        <div class="pipeline-label">
+                            Applications
+                        </div>
+
+                    </div>
+
+                    <div class="pipeline-arrow">
+                        →
+                    </div>
+
+                    <div class="pipeline-item">
+
+                        <div class="pipeline-number">
+                            {{ forwarded_candidates }}
+                        </div>
+
+                        <div class="pipeline-label">
+                            Forwarded
+                        </div>
+
+                    </div>
+
+                    <div class="pipeline-arrow">
+                        →
+                    </div>
+
+                    <div class="pipeline-item">
+
+                        <div class="pipeline-number">
+                            {{ shortlisted_candidates }}
+                        </div>
+
+                        <div class="pipeline-label">
+                            Shortlisted
+                        </div>
+
+                    </div>
+
+                    <div class="pipeline-arrow">
+                        →
+                    </div>
+
+                    <div class="pipeline-item">
+
+                        <div class="pipeline-number">
+                            {{ interview_candidates }}
+                        </div>
+
+                        <div class="pipeline-label">
+                            Interview
+                        </div>
+
+                    </div>
+
+                    <div class="pipeline-arrow">
+                        →
+                    </div>
+
+                    <div class="pipeline-item">
+
+                        <div class="pipeline-number">
+                            {{ selected_candidates }}
+                        </div>
+
+                        <div class="pipeline-label">
+                            Selected
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- COMPANY PROFILE -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>
+                        Company Profile
+                    </h3>
+
+                    <span>
+                        Account information
+                    </span>
+
+                </div>
+
+                <div class="profile-row">
+
+                    <span class="profile-label">
+                        Company
+                    </span>
+
+                    <span class="profile-value">
+                        {{ company.company_name }}
+                    </span>
+
+                </div>
+
+                <div class="profile-row">
+
+                    <span class="profile-label">
+                        Industry
+                    </span>
+
+                    <span class="profile-value">
+                        {{ company.industry or "Not provided" }}
+                    </span>
+
+                </div>
+
+                <div class="profile-row">
+
+                    <span class="profile-label">
+                        Location
+                    </span>
+
+                    <span class="profile-value">
+                        {{ company.location or "Not provided" }}
+                    </span>
+
+                </div>
+
+                <div class="profile-row">
+
+                    <span class="profile-label">
+                        Website
+                    </span>
+
+                    <span class="profile-value">
+                        {{ company.website or "Not provided" }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- RECENT JOBS -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>
+                        Recent Jobs
+                    </h3>
+
+                    <span>
+                        Your opportunities
+                    </span>
+
+                </div>
+
+                {% if jobs %}
+
+                    <div class="job-list">
+
+                        {% for job in jobs[:5] %}
+
+                            <div class="job">
+
+                                <div class="job-top">
+
+                                    <div>
+
+                                        <div class="job-title">
+                                            {{ job.job_title }}
+                                        </div>
+
+                                        <div class="job-location">
+                                            {{ job.location }}
+                                            ·
+                                            {{ job.job_type }}
+                                        </div>
+
+                                    </div>
+
+                                    <div class="job-status">
+                                        {{ job.status }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="empty">
+                        No jobs have been posted yet.
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- RECRUITMENT SUMMARY -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h3>
+                        Recruitment Summary
+                    </h3>
+
+                    <span>
+                        Candidate status
+                    </span>
+
+                </div>
+
+                <div class="profile-row">
+
+                    <span class="profile-label">
+                        Forwarded
+                    </span>
+
+                    <span class="profile-value">
+                        {{ forwarded_candidates }}
+                    </span>
+
+                </div>
+
+                <div class="profile-row">
+
+                    <span class="profile-label">
+                        Shortlisted
+                    </span>
+
+                    <span class="profile-value">
+                        {{ shortlisted_candidates }}
+                    </span>
+
+                </div>
+
+                <div class="profile-row">
+
+                    <span class="profile-label">
+                        Interviews
+                    </span>
+
+                    <span class="profile-value">
+                        {{ interview_candidates }}
+                    </span>
+
+                </div>
+
+                <div class="profile-row">
+
+                    <span class="profile-label">
+                        Selected
+                    </span>
+
+                    <span class="profile-value">
+                        {{ selected_candidates }}
+                    </span>
+
+                </div>
+
+                <div class="profile-row">
+
+                    <span class="profile-label">
+                        Rejected
+                    </span>
+
+                    <span class="profile-value">
+                        {{ rejected_candidates }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

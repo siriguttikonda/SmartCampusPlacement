@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Post New Job | Smart Campus Placement</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
+        body {
+            margin: 0;
+            background: #f6f8fc;
+            color: #1e293b;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .company-page {
+            min-height: 100vh;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 34px;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 26px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 7px;
+            font-size: 28px;
+            color: #1e293b;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #718096;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .header-badge {
+            padding: 9px 13px;
+            background: #eef1ff;
+            color: #4f5fc7;
+            border: 1px solid #dfe4ff;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+
+        /* =====================================================
+           FORM CARD
+        ===================================================== */
+
+        .form-card {
+            max-width: 1000px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 2px 6px rgba(51, 65, 85, 0.04);
+            padding: 28px;
+        }
+
+
+        /* =====================================================
+           FORM SECTION
+        ===================================================== */
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-section h2 {
+            margin: 0 0 6px;
+            font-size: 17px;
+            color: #1e293b;
+        }
+
+        .form-section p {
+            margin: 0 0 20px;
+            color: #718096;
+            font-size: 12px;
+        }
+
+
+        /* =====================================================
+           FORM GRID
+        ===================================================== */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+
+        /* =====================================================
+           FORM GROUP
+        ===================================================== */
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        .required {
+            color: #d95c5c;
+        }
+
+
+        /* =====================================================
+           INPUTS
+        ===================================================== */
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+
+            width: 100%;
+            box-sizing: border-box;
+
+            padding: 11px 13px;
+
+            border: 1px solid #dfe4ec;
+            border-radius: 9px;
+
+            background: #ffffff;
+            color: #334155;
+
+            font-size: 13px;
+
+            outline: none;
+
+            transition: 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+
+            border-color: #5b6ee1;
+
+            box-shadow:
+                0 0 0 3px #eef1ff;
+        }
+
+        .form-group textarea {
+
+            resize: vertical;
+
+            min-height: 110px;
+        }
+
+
+        /* =====================================================
+           AUTOCOMPLETE
+        ===================================================== */
+
+        .autocomplete-wrapper {
+            position: relative;
+        }
+
+        .suggestions {
+
+            position: absolute;
+
+            left: 0;
+            right: 0;
+
+            top: calc(100% + 4px);
+
+            background: #ffffff;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 8px;
+
+            box-shadow:
+                0 8px 20px rgba(51, 65, 85, 0.10);
+
+            z-index: 1000;
+
+            max-height: 220px;
+
+            overflow-y: auto;
+
+            display: none;
+        }
+
+        .suggestion-item {
+
+            padding: 11px 13px;
+
+            font-size: 13px;
+
+            color: #334155;
+
+            cursor: pointer;
+
+            border-bottom:
+                1px solid #f1f3f7;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+
+            background: #eef1ff;
+
+            color: #4f5fc7;
+        }
+
+
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
+
+        .form-actions {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+            padding-top: 22px;
+
+            border-top:
+                1px solid #edf0f5;
+        }
+
+        .btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 11px 18px;
+
+            border-radius: 9px;
+
+            border: none;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        .btn-primary {
+
+            background: #5b6ee1;
+
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+
+            background: #4f5fc7;
+        }
+
+        .btn-secondary {
+
+            background: #f1f3f9;
+
+            color: #475569;
+        }
+
+        .btn-secondary:hover {
+
+            background: #e8ebf3;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1000px) {
+
+            .main-content {
+
+                margin-left: 0;
+
+                padding: 24px;
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .main-content {
+
+                padding: 18px;
+            }
+
+            .page-header {
+
+                flex-direction: column;
+            }
+
+            .form-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+            .form-card {
+
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="company-page">
+
+    <main class="main-content">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>Post a New Job</h1>
+
+                <p>
+                    Create a job opportunity for the campus
+                    placement process.
+                </p>
+
+            </div>
+
+            <div class="header-badge">
+
+                {{ company.company_name }}
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FORM
+        ================================================== -->
+
+        <form method="POST"
+              class="form-card">
+
+
+            <!-- =================================================
+                 BASIC INFORMATION
+            ================================================== -->
+
+            <div class="form-section">
+
+                <h2>Basic Job Information</h2>
+
+                <p>
+                    Provide the basic details of the position.
+                </p>
+
+
+                <div class="form-grid">
+
+
+                    <!-- JOB TITLE -->
+
+                    <div class="form-group">
+
+                        <label for="job_title">
+
+                            Job Title
+
+                            <span class="required">*</span>
+
+                        </label>
+
+
+                        <div class="autocomplete-wrapper">
+
+                            <input
+                                type="text"
+                                id="job_title"
+                                name="job_title"
+                                placeholder="Start typing job title..."
+                                autocomplete="off"
+                                required
+                            >
+
+
+                            <div
+                                id="jobTitleSuggestions"
+                                class="suggestions">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- JOB TYPE -->
+
+                    <div class="form-group">
+
+                        <label for="job_type">
+
+                            Job Type
+
+                            <span class="required">*</span>
+
+                        </label>
+
+
+                        <select
+                            id="job_type"
+                            name="job_type"
+                            required
+                        >
+
+                            <option value="">
+                                Select job type
+                            </option>
+
+                            <option value="Full Time">
+                                Full Time
+                            </option>
+
+                            <option value="Part Time">
+                                Part Time
+                            </option>
+
+                            <option value="Internship">
+                                Internship
+                            </option>
+
+                            <option value="Contract">
+                                Contract
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- LOCATION -->
+
+                    <div class="form-group">
+
+                        <label for="location">
+
+                            Location
+
+                            <span class="required">*</span>
+
+                        </label>
+
+
+                        <div class="autocomplete-wrapper">
+
+                            <input
+                                type="text"
+                                id="location"
+                                name="location"
+                                placeholder="Start typing location..."
+                                autocomplete="off"
+                                required
+                            >
+
+
+                            <div
+                                id="locationSuggestions"
+                                class="suggestions">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- SALARY -->
+
+                    <div class="form-group">
+
+                        <label for="salary">
+
+                            Salary / Package
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="salary"
+                            name="salary"
+                            placeholder="e.g. ₹8 LPA"
+                        >
+
+                    </div>
+
+
+                    <!-- DEADLINE -->
+
+                    <div class="form-group">
+
+                        <label for="deadline">
+
+                            Application Deadline
+
+                        </label>
+
+
+                        <input
+                            type="date"
+                            id="deadline"
+                            name="deadline"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ELIGIBILITY
+            ================================================== -->
+
+            <div class="form-section">
+
+                <h2>Eligibility Criteria</h2>
+
+                <p>
+                    Define the academic requirements for students.
+                </p>
+
+
+                <div class="form-grid">
+
+
+                    <!-- CGPA -->
+
+                    <div class="form-group">
+
+                        <label for="minimum_cgpa">
+
+                            Minimum CGPA
+
+                        </label>
+
+
+                        <input
+                            type="number"
+                            id="minimum_cgpa"
+                            name="minimum_cgpa"
+                            min="0"
+                            max="10"
+                            step="0.01"
+                            placeholder="e.g. 7.0"
+                        >
+
+                    </div>
+
+
+                    <!-- GRADUATION YEAR -->
+
+                    <div class="form-group">
+
+                        <label for="graduation_year">
+
+                            Graduation Year
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="graduation_year"
+                            name="graduation_year"
+                            placeholder="e.g. 2027"
+                        >
+
+                    </div>
+
+
+                    <!-- DEPARTMENTS -->
+
+                    <div class="form-group full">
+
+                        <label for="eligible_departments">
+
+                            Eligible Departments
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="eligible_departments"
+                            name="eligible_departments"
+                            placeholder="e.g. Computer Science, MCA, IT"
+                        >
+
+                    </div>
+
+
+                    <!-- BACKLOG -->
+
+                    <div class="form-group full">
+
+                        <label for="backlog_requirement">
+
+                            Backlog Requirement
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="backlog_requirement"
+                            name="backlog_requirement"
+                            placeholder="e.g. No active backlogs"
+                        >
+
+                    </div>
+
+
+                    <!-- SKILLS -->
+
+                    <div class="form-group full">
+
+                        <label for="required_skills">
+
+                            Required Skills
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            id="required_skills"
+                            name="required_skills"
+                            placeholder="e.g. Python, SQL, Flask, JavaScript"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 JOB DETAILS
+            ================================================== -->
+
+            <div class="form-section">
+
+                <h2>Job Details</h2>
+
+                <p>
+                    Explain the role and hiring process.
+                </p>
+
+
+                <div class="form-grid">
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="form-group full">
+
+                        <label for="description">
+
+                            Job Description
+
+                        </label>
+
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            placeholder="Describe the role, responsibilities and expectations..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- SELECTION PROCESS -->
+
+                    <div class="form-group full">
+
+                        <label for="selection_process">
+
+                            Selection Process
+
+                        </label>
+
+
+                        <textarea
+                            id="selection_process"
+                            name="selection_process"
+                            placeholder="e.g. Aptitude Test → Technical Interview → HR Interview"
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ACTIONS
+            ================================================== -->
+
+            <div class="form-actions">
+
+
+                <a
+                    href="{{ url_for('company.jobs') }}"
+                    class="btn btn-secondary"
+                >
+
+                    Cancel
+
+                </a>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+
+                    Submit Job for Approval
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+    </main>
+
+</div>
+
+
+<!-- =========================================================
+     AUTOCOMPLETE JAVASCRIPT
+========================================================= -->
+
+<script>
+
+
+/* =========================================================
+   JOB TITLES
+========================================================= */
+
+const jobTitles = [
+
+    "Python Developer",
+
+    "Java Developer",
+
+    "JavaScript Developer",
+
+    "React Developer",
+
+    "Angular Developer",
+
+    "Node.js Developer",
+
+    "Full Stack Developer",
+
+    "Frontend Developer",
+
+    "Backend Developer",
+
+    "Web Developer",
+
+    "Software Developer",
+
+    "Software Engineer",
+
+    "Data Analyst",
+
+    "Data Scientist",
+
+    "Machine Learning Engineer",
+
+    "AI Engineer",
+
+    "Artificial Intelligence Engineer",
+
+    "Cloud Engineer",
+
+    "Cloud Developer",
+
+    "DevOps Engineer",
+
+    "Cyber Security Analyst",
+
+    "Cyber Security Engineer",
+
+    "Cyber Security Specialist",
+
+    "UI/UX Designer",
+
+    "UI Designer",
+
+    "UX Designer",
+
+    "Product Designer",
+
+    "Product Manager",
+
+    "Business Analyst",
+
+    "QA Engineer",
+
+    "Quality Assurance Engineer",
+
+    "Testing Engineer",
+
+    "Salesforce Developer",
+
+    "Salesforce Administrator",
+
+    "Database Administrator",
+
+    "Database Developer",
+
+    "Information Technology",
+
+    "IT Support Engineer",
+
+    "IT Analyst",
+
+    "Network Engineer",
+
+    "System Administrator"
+
+];
+
+
+/* =========================================================
+   LOCATIONS
+========================================================= */
+
+const locations = [
+
+    "Hyderabad",
+
+    "Bangalore",
+
+    "Bengaluru",
+
+    "Chennai",
+
+    "Mumbai",
+
+    "Pune",
+
+    "Delhi",
+
+    "New Delhi",
+
+    "Noida",
+
+    "Gurugram",
+
+    "Gurgaon",
+
+    "Kolkata",
+
+    "Ahmedabad",
+
+    "Coimbatore",
+
+    "Visakhapatnam",
+
+    "Vijayawada",
+
+    "Mysore",
+
+    "Mysuru",
+
+    "Kochi",
+
+    "Thiruvananthapuram",
+
+    "Jaipur",
+
+    "Indore",
+
+    "Bhubaneswar",
+
+    "Chandigarh",
+
+    "Lucknow",
+
+    "Nagpur",
+
+    "Remote",
+
+    "Hybrid"
+
+];
+
+
+/* =========================================================
+   AUTOCOMPLETE FUNCTION
+========================================================= */
+
+function setupAutocomplete(
+    inputId,
+    suggestionsId,
+    data
+) {
+
+    const input =
+        document.getElementById(inputId);
+
+    const suggestions =
+        document.getElementById(suggestionsId);
+
+
+    input.addEventListener(
+        "input",
+        function () {
+
+
+            const value =
+                input.value.trim().toLowerCase();
+
+
+            suggestions.innerHTML = "";
+
+
+            if (value === "") {
+
+                suggestions.style.display = "none";
+
+                return;
+            }
+
+
+            const matches =
+                data.filter(function (item) {
+
+                    return item
+                        .toLowerCase()
+                        .includes(value);
+
+                });
+
+
+            if (matches.length === 0) {
+
+                suggestions.style.display = "none";
+
+                return;
+            }
+
+
+            matches.forEach(function (item) {
+
+
+                const suggestion =
+                    document.createElement("div");
+
+
+                suggestion.className =
+                    "suggestion-item";
+
+
+                suggestion.textContent =
+                    item;
+
+
+                suggestion.addEventListener(
+                    "mousedown",
+                    function (event) {
+
+                        event.preventDefault();
+
+                        input.value = item;
+
+                        suggestions.innerHTML = "";
+
+                        suggestions.style.display =
+                            "none";
+
+                    }
+                );
+
+
+                suggestions.appendChild(
+                    suggestion
+                );
+
+            });
+
+
+            suggestions.style.display =
+                "block";
+
+        }
+    );
+
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+
+            if (
+                !input.contains(event.target) &&
+                !suggestions.contains(event.target)
+            ) {
+
+                suggestions.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   INITIALIZE JOB TITLE AUTOCOMPLETE
+========================================================= */
+
+setupAutocomplete(
+
+    "job_title",
+
+    "jobTitleSuggestions",
+
+    jobTitles
+
+);
+
+
+/* =========================================================
+   INITIALIZE LOCATION AUTOCOMPLETE
+========================================================= */
+
+setupAutocomplete(
+
+    "location",
+
+    "locationSuggestions",
+
+    locations
+
+);
+
+</script>
+<script>
+
+const jobTitleInput = document.getElementById("job_title");
+
+jobTitleInput.addEventListener("input", function () {
+
+    console.log("Typing detected:", this.value);
+
+});
+
+</script>
+
+
+</body>
+
+</html>

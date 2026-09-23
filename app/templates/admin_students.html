@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Students | Smart Campus</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =========================================
+           PAGE
+           ========================================= */
+
+        .admin-page {
+            min-height: 100vh;
+            background: var(--background);
+        }
+
+
+        /* =========================================
+           SIDEBAR
+           ========================================= */
+
+        .admin-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 250px;
+            height: 100vh;
+
+            background: #f4f7fc;
+            border-right: 1px solid #e8edf3;
+
+            padding: 28px 18px;
+
+            box-sizing: border-box;
+
+            z-index: 100;
+        }
+
+        .admin-brand {
+            padding: 0 14px 28px;
+
+            border-bottom: 1px solid #e8edf3;
+
+            margin-bottom: 22px;
+        }
+
+        .admin-brand h2 {
+            margin: 0;
+
+            font-size: 22px;
+            font-weight: 700;
+
+            color: #526078;
+        }
+
+        .admin-brand p {
+            margin: 5px 0 0;
+
+            font-size: 13px;
+
+            color: #7f8b9d;
+        }
+
+
+        /* =========================================
+           NAVIGATION
+           ========================================= */
+
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+        .admin-nav a,
+        .admin-logout a {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            text-decoration: none;
+
+            color: #526078;
+
+            font-size: 14px;
+            font-weight: 500;
+
+            transition: all 0.2s ease;
+        }
+
+        .admin-nav a:hover,
+        .admin-logout a:hover {
+            background: #eef3fb;
+            color: #668bd8;
+
+            transform: translateX(2px);
+        }
+
+        .admin-nav a.active {
+            background: #eef3fb;
+
+            color: #668bd8;
+
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+
+            text-align: center;
+
+            font-size: 17px;
+        }
+
+        .admin-logout {
+            margin-top: 25px;
+
+            padding-top: 22px;
+
+            border-top: 1px solid #e8edf3;
+        }
+
+        .admin-logout a {
+            color: #b87979;
+        }
+
+        .admin-logout a:hover {
+            background: #fdf3f3;
+            color: #b15f5f;
+        }
+
+
+        /* =========================================
+           MAIN
+           ========================================= */
+
+        .admin-main {
+            margin-left: 250px;
+
+            min-height: 100vh;
+
+            padding: 38px 45px;
+
+            box-sizing: border-box;
+        }
+
+
+        /* =========================================
+           HEADER
+           ========================================= */
+
+        .page-header {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+
+            font-size: 30px;
+            font-weight: 700;
+
+            color: #3f4b5f;
+        }
+
+        .page-header p {
+            margin: 7px 0 0;
+
+            font-size: 14px;
+
+            color: #7f8b9d;
+        }
+
+        .student-count {
+            padding: 9px 15px;
+
+            border-radius: 20px;
+
+            background: #f1f5ff;
+
+            color: #668bd8;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        /* =========================================
+           SEARCH
+           ========================================= */
+
+        .search-card {
+            background: #ffffff;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 16px;
+
+            padding: 20px 22px;
+
+            margin-bottom: 28px;
+
+            box-shadow:
+                0 5px 18px rgba(100, 116, 139, 0.06);
+        }
+
+        .search-form {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+
+            min-width: 0;
+
+            padding: 12px 14px;
+
+            border: 1px solid #dfe6ef;
+
+            border-radius: 9px;
+
+            background: #fbfcfe;
+
+            color: #3f4b5f;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: #a9bce5;
+
+            background: #ffffff;
+
+            box-shadow:
+                0 0 0 3px #f1f5ff;
+        }
+
+        .search-input::placeholder {
+            color: #a1aaba;
+        }
+
+        .search-btn {
+            border: none;
+
+            padding: 12px 20px;
+
+            border-radius: 9px;
+
+            background: #7c9fe6;
+
+            color: #ffffff;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: all 0.2s ease;
+        }
+
+        .search-btn:hover {
+            background: #668bd8;
+
+            transform: translateY(-1px);
+        }
+
+        .clear-btn {
+            padding: 11px 15px;
+
+            border: 1px solid #e0e6ee;
+
+            border-radius: 9px;
+
+            background: #ffffff;
+
+            color: #708099;
+
+            font-size: 13px;
+            font-weight: 500;
+
+            text-decoration: none;
+
+            transition: all 0.2s ease;
+        }
+
+        .clear-btn:hover {
+            background: #f5f7fb;
+
+            color: #526078;
+        }
+
+
+        /* =========================================
+           STUDENT GRID
+           ========================================= */
+
+        .students-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 20px;
+        }
+
+
+        /* =========================================
+           STUDENT CARD
+           ========================================= */
+
+        .student-card {
+            background: #ffffff;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 16px;
+
+            padding: 23px;
+
+            box-shadow:
+                0 5px 18px rgba(100, 116, 139, 0.06);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .student-card:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 10px 25px rgba(100, 116, 139, 0.11);
+        }
+
+
+        /* =========================================
+           STUDENT HEADER
+           ========================================= */
+
+        .student-header {
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            margin-bottom: 20px;
+        }
+
+        .student-avatar {
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            border-radius: 13px;
+
+            background: #f1f5ff;
+
+            color: #668bd8;
+
+            font-size: 19px;
+        }
+
+        .student-heading {
+            flex: 1;
+        }
+
+        .student-heading h2 {
+            margin: 0 0 4px;
+
+            font-size: 17px;
+
+            color: #3f4b5f;
+        }
+
+        .student-id {
+            margin: 0;
+
+            font-size: 12px;
+
+            color: #8994a5;
+        }
+
+        .view-btn {
+            padding: 8px 12px;
+
+            border-radius: 8px;
+
+            background: #f1f5ff;
+
+            border: 1px solid #e0e8f7;
+
+            color: #668bd8;
+
+            font-size: 12px;
+            font-weight: 600;
+
+            text-decoration: none;
+
+            white-space: nowrap;
+
+            transition: all 0.2s ease;
+        }
+
+        .view-btn:hover {
+            background: #e7eefc;
+        }
+
+
+        /* =========================================
+           STUDENT DETAILS
+           ========================================= */
+
+        .student-details {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 12px;
+
+            padding-top: 18px;
+
+            border-top: 1px solid #edf0f4;
+        }
+
+        .detail-item {
+            min-width: 0;
+        }
+
+        .detail-item.full {
+            grid-column: 1 / -1;
+        }
+
+        .detail-label {
+            display: block;
+
+            margin-bottom: 4px;
+
+            font-size: 11px;
+
+            color: #9aa4b3;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.3px;
+        }
+
+        .detail-value {
+            display: block;
+
+            color: #526078;
+
+            font-size: 13px;
+            font-weight: 500;
+
+            overflow-wrap: anywhere;
+        }
+
+
+        /* =========================================
+           ACADEMIC HIGHLIGHTS
+           ========================================= */
+
+        .academic-strip {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 8px;
+
+            margin-top: 18px;
+
+            padding-top: 16px;
+
+            border-top: 1px solid #edf0f4;
+        }
+
+        .academic-box {
+            text-align: center;
+
+            padding: 10px 5px;
+
+            border-radius: 9px;
+
+            background: #fbfcfe;
+        }
+
+        .academic-box span {
+            display: block;
+
+            margin-bottom: 3px;
+
+            font-size: 10px;
+
+            color: #9aa4b3;
+
+            text-transform: uppercase;
+        }
+
+        .academic-box strong {
+            color: #526078;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================================
+           EMPTY STATE
+           ========================================= */
+
+        .empty-state {
+            background: #ffffff;
+
+            border: 1px dashed #dce3ec;
+
+            border-radius: 16px;
+
+            padding: 50px 25px;
+
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 58px;
+            height: 58px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 16px;
+
+            border-radius: 15px;
+
+            background: #f1f5ff;
+
+            font-size: 23px;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 7px;
+
+            font-size: 17px;
+
+            color: #526078;
+        }
+
+        .empty-state p {
+            margin: 0;
+
+            font-size: 13px;
+
+            color: #8a95a5;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+
+        @media (max-width: 1050px) {
+
+            .students-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .admin-sidebar {
+                position: relative;
+
+                width: 100%;
+                height: auto;
+
+                border-right: none;
+
+                border-bottom: 1px solid #e8edf3;
+            }
+
+            .admin-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .admin-main {
+                margin-left: 0;
+
+                padding: 25px 20px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .page-header {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                gap: 12px;
+            }
+
+            .search-form {
+                flex-wrap: wrap;
+            }
+
+            .search-input {
+                flex-basis: 100%;
+            }
+
+            .student-header {
+                align-items: flex-start;
+            }
+
+            .student-details {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-item.full {
+                grid-column: auto;
+            }
+
+        }
+
+        /* =========================================
+   FIX STUDENT DETAIL ALIGNMENT
+   ========================================= */
+
+.student-details {
+    display: grid !important;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+
+    gap: 18px 28px !important;
+
+    padding-top: 18px !important;
+
+    border-top: 1px solid #edf0f4 !important;
+}
+
+.detail-item {
+    min-width: 0 !important;
+
+    display: flex !important;
+
+    flex-direction: column !important;
+
+    align-items: flex-start !important;
+
+    justify-content: flex-start !important;
+}
+
+.detail-item.full {
+    grid-column: 1 / -1 !important;
+}
+
+.detail-label {
+    display: block !important;
+
+    width: 100% !important;
+
+    margin-bottom: 5px !important;
+
+    font-size: 11px !important;
+
+    color: #9aa4b3 !important;
+
+    text-transform: uppercase !important;
+
+    letter-spacing: 0.3px !important;
+
+    line-height: 1.3 !important;
+}
+
+.detail-value {
+    display: block !important;
+
+    width: 100% !important;
+
+    margin: 0 !important;
+
+    color: #526078 !important;
+
+    font-size: 14px !important;
+
+    font-weight: 600 !important;
+
+    text-align: left !important;
+
+    line-height: 1.4 !important;
+
+    overflow-wrap: anywhere !important;
+}
+
+.detail-item.full .detail-value {
+    width: auto !important;
+    max-width: 100% !important;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .student-details {
+        grid-template-columns: 1fr !important;
+    }
+
+    .detail-item.full {
+        grid-column: auto !important;
+    }
+
+}
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="admin-page">
+
+
+    <!-- =========================================
+         SIDEBAR
+         ========================================= -->
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-brand">
+
+            <h2>Smart Campus</h2>
+
+            <p>Placement Administration</p>
+
+        </div>
+
+
+        <nav class="admin-nav">
+
+            <a href="{{ url_for('admin.dashboard') }}">
+
+                <span class="nav-icon">⌂</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="{{ url_for('admin.manage_jobs') }}">
+
+                <span class="nav-icon">▣</span>
+
+                Manage Jobs
+
+            </a>
+
+
+            <a href="{{ url_for('admin.manage_students') }}"
+               class="active">
+
+                <span class="nav-icon">♙</span>
+
+                Manage Students
+
+            </a>
+
+
+            <a href="{{ url_for('admin.applications') }}">
+
+                <span class="nav-icon">✓</span>
+
+                Applications
+
+            </a>
+
+        </nav>
+
+
+        <div class="admin-logout">
+
+            <a href="{{ url_for('auth.logout') }}">
+
+                <span class="nav-icon">↪</span>
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         MAIN
+         ========================================= -->
+
+    <main class="admin-main">
+
+
+        <!-- HEADER -->
+
+        <header class="page-header">
+
+            <div>
+
+                <h1>Manage Students</h1>
+
+                <p>
+                    View and manage registered student profiles.
+                </p>
+
+            </div>
+
+
+            <div class="student-count">
+                {{ students|length }} Students
+            </div>
+
+        </header>
+
+
+
+        <!-- =====================================
+             SEARCH
+             ===================================== -->
+
+        <section class="search-card">
+
+            <form
+                method="GET"
+                action="{{ url_for('admin.manage_students') }}"
+                class="search-form"
+            >
+
+                <input
+                    type="text"
+                    name="search"
+                    class="search-input"
+                    placeholder="Search by Student ID, Name or Email"
+                    value="{{ search }}"
+                >
+
+
+                <button
+                    type="submit"
+                    class="search-btn"
+                >
+                    Search
+                </button>
+
+
+                <a
+                    href="{{ url_for('admin.manage_students') }}"
+                    class="clear-btn"
+                >
+                    Clear
+                </a>
+
+            </form>
+
+        </section>
+
+
+
+        <!-- =====================================
+             STUDENTS
+             ===================================== -->
+
+        {% if students %}
+
+            <div class="students-grid">
+
+
+                {% for student in students %}
+
+                    <article class="student-card">
+
+
+                        <!-- STUDENT HEADER -->
+
+                        <div class="student-header">
+
+                            <div class="student-avatar">
+                                👨‍🎓
+                            </div>
+
+
+                            <div class="student-heading">
+
+                                <h2>
+                                    {{ student.user.name }}
+                                </h2>
+
+                                <p class="student-id">
+                                    Student ID:
+                                    {{ student.student_id }}
+                                </p>
+
+                            </div>
+
+
+                            <a
+                                href="{{ url_for('admin.student_details', student_id=student.id) }}"
+                                class="view-btn"
+                            >
+                                View Details
+                            </a>
+
+                        </div>
+
+
+
+                        <!-- DETAILS -->
+
+                        <div class="student-details">
+
+
+                            <div class="detail-item full">
+
+                                <span class="detail-label">
+                                    Email
+                                </span>
+
+                                <span class="detail-value">
+                                    {{ student.user.email }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Department
+                                </span>
+
+                                <span class="detail-value">
+                                    {{ student.department }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Course
+                                </span>
+
+                                <span class="detail-value">
+                                    {{ student.course }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Graduation Year
+                                </span>
+
+                                <span class="detail-value">
+                                    {{ student.graduation_year }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Active Backlogs
+                                </span>
+
+                                <span class="detail-value">
+                                    {{ student.active_backlogs }}
+                                </span>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- ACADEMIC HIGHLIGHTS -->
+
+                        <div class="academic-strip">
+
+
+                            <div class="academic-box">
+
+                                <span>10th</span>
+
+                                <strong>
+                                    {{ student.tenth_percentage }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="academic-box">
+
+                                <span>12th</span>
+
+                                <strong>
+                                    {{ student.twelfth_percentage }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="academic-box">
+
+                                <span>CGPA</span>
+
+                                <strong>
+                                    {{ student.current_cgpa }}
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </article>
+
+                {% endfor %}
+
+
+            </div>
+
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    👨‍🎓
+                </div>
+
+                <h3>
+                    No Students Found
+                </h3>
+
+                <p>
+                    Try searching with a different Student ID,
+                    name or email.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

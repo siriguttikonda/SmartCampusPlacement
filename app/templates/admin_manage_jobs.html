@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Jobs | Smart Campus</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f6f8fc;
+            color: #3f4b5f;
+        }
+
+        .admin-page {
+            min-height: 100vh;
+        }
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .admin-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 250px;
+            height: 100vh;
+
+            background: #f4f7fc;
+            border-right: 1px solid #e8edf3;
+
+            padding: 28px 18px;
+
+            z-index: 100;
+        }
+
+        .admin-brand {
+            padding: 0 14px 28px;
+
+            border-bottom: 1px solid #e8edf3;
+
+            margin-bottom: 22px;
+        }
+
+        .admin-brand h2 {
+            margin: 0;
+
+            font-size: 22px;
+            font-weight: 700;
+
+            color: #526078;
+        }
+
+        .admin-brand p {
+            margin: 5px 0 0;
+
+            font-size: 13px;
+
+            color: #7f8b9d;
+        }
+
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+        .admin-nav a,
+        .admin-logout a {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            text-decoration: none;
+
+            color: #526078;
+
+            font-size: 14px;
+            font-weight: 500;
+
+            transition: all 0.2s ease;
+        }
+
+        .admin-nav a:hover,
+        .admin-logout a:hover {
+            background: #eef3fb;
+
+            color: #668bd8;
+
+            transform: translateX(2px);
+        }
+
+        .admin-nav a.active {
+            background: #eef3fb;
+
+            color: #668bd8;
+
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+
+            text-align: center;
+
+            font-size: 17px;
+        }
+
+        .admin-logout {
+            margin-top: 25px;
+
+            padding-top: 22px;
+
+            border-top: 1px solid #e8edf3;
+        }
+
+        .admin-logout a {
+            color: #b87979;
+        }
+
+        .admin-logout a:hover {
+            background: #fdf3f3;
+
+            color: #b15f5f;
+        }
+
+        /* =====================================================
+           MAIN CONTENT
+        ===================================================== */
+
+        .admin-main {
+            margin-left: 250px;
+
+            min-height: 100vh;
+
+            padding: 38px 45px;
+        }
+
+        /* =====================================================
+           PAGE HEADER
+        ===================================================== */
+
+        .page-header {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 32px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+
+            font-size: 30px;
+            font-weight: 700;
+
+            color: #3f4b5f;
+        }
+
+        .page-header p {
+            margin: 7px 0 0;
+
+            font-size: 14px;
+
+            color: #7f8b9d;
+        }
+
+        .job-count {
+            padding: 9px 15px;
+
+            border-radius: 20px;
+
+            background: #f1f5ff;
+
+            color: #668bd8;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* =====================================================
+           SECTION
+        ===================================================== */
+
+        .jobs-section {
+            margin-bottom: 38px;
+        }
+
+        .section-header {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .section-title h2 {
+            margin: 0;
+
+            font-size: 19px;
+
+            color: #4f5d73;
+        }
+
+        .section-count {
+            min-width: 28px;
+
+            padding: 4px 9px;
+
+            border-radius: 20px;
+
+            background: #f1f5ff;
+
+            color: #668bd8;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            text-align: center;
+        }
+
+        /* =====================================================
+           JOB LIST
+        ===================================================== */
+
+        .jobs-list {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 20px;
+        }
+
+        /* =====================================================
+           JOB CARD
+        ===================================================== */
+
+        .job-card {
+            background: #ffffff;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 16px;
+
+            padding: 23px;
+
+            box-shadow:
+                0 5px 18px rgba(100, 116, 139, 0.06);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .job-card:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 10px 25px rgba(100, 116, 139, 0.10);
+        }
+
+        /* =====================================================
+           JOB TOP
+        ===================================================== */
+
+        .job-top {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 14px;
+
+            margin-bottom: 18px;
+        }
+
+        .company-avatar {
+            width: 46px;
+            height: 46px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            border-radius: 12px;
+
+            background: #f1f5ff;
+
+            color: #668bd8;
+
+            font-size: 18px;
+        }
+
+        .job-title-area {
+            flex: 1;
+        }
+
+        .job-title-area h3 {
+            margin: 0 0 5px;
+
+            font-size: 17px;
+
+            color: #3f4b5f;
+        }
+
+        .company-name {
+            margin: 0;
+
+            font-size: 13px;
+
+            color: #7f8b9d;
+        }
+
+        /* =====================================================
+           STATUS BADGES
+        ===================================================== */
+
+        .status-badge {
+            padding: 6px 10px;
+
+            border-radius: 8px;
+
+            font-size: 11px;
+            font-weight: 700;
+
+            white-space: nowrap;
+        }
+
+        .status-pending {
+            background: #fff6df;
+
+            color: #b07a25;
+        }
+
+        .status-published {
+            background: #e8f7ef;
+
+            color: #27845c;
+        }
+
+        .status-rejected {
+            background: #fcecec;
+
+            color: #b15f5f;
+        }
+
+        /* =====================================================
+           JOB DETAILS
+        ===================================================== */
+
+        .job-details {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 12px;
+
+            padding: 15px 0;
+
+            border-top: 1px solid #edf0f4;
+
+            border-bottom: 1px solid #edf0f4;
+
+            margin-bottom: 16px;
+        }
+
+        .detail-item {
+            font-size: 13px;
+        }
+
+        .detail-label {
+            display: block;
+
+            margin-bottom: 3px;
+
+            color: #9aa4b3;
+
+            font-size: 11px;
+        }
+
+        .detail-value {
+            color: #526078;
+
+            font-weight: 500;
+        }
+
+        /* =====================================================
+           EXTRA INFORMATION
+        ===================================================== */
+
+        .job-extra {
+            margin-bottom: 17px;
+        }
+
+        .extra-row {
+            margin-bottom: 9px;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+        }
+
+        .extra-label {
+            display: block;
+
+            margin-bottom: 2px;
+
+            color: #9aa4b3;
+
+            font-size: 11px;
+        }
+
+        .extra-value {
+            color: #526078;
+
+            font-weight: 500;
+        }
+
+        /* =====================================================
+           DESCRIPTION
+        ===================================================== */
+
+        .job-description {
+            margin-bottom: 18px;
+        }
+
+        .job-description p {
+            margin: 0;
+
+            color: #68758a;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        /* =====================================================
+           ACTION BUTTONS
+        ===================================================== */
+
+        .job-actions {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            padding-top: 3px;
+        }
+
+        .action-btn {
+            border: none;
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 9px 15px;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            text-decoration: none;
+
+            transition: all 0.2s ease;
+        }
+
+        .approve-btn {
+            background: #e8f7ef;
+
+            color: #27845c;
+
+            border: 1px solid #d5eedf;
+        }
+
+        .approve-btn:hover {
+            background: #dcf3e6;
+        }
+
+        .reject-btn {
+            background: #fdf3f3;
+
+            color: #b15f5f;
+
+            border: 1px solid #f4dede;
+        }
+
+        .reject-btn:hover {
+            background: #faeaea;
+        }
+
+        /* =====================================================
+           EMPTY STATE
+        ===================================================== */
+
+        .empty-state {
+            background: #ffffff;
+
+            border: 1px dashed #dce3ec;
+
+            border-radius: 16px;
+
+            padding: 45px 25px;
+
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 55px;
+            height: 55px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 15px;
+
+            border-radius: 14px;
+
+            background: #f1f5ff;
+
+            font-size: 22px;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 7px;
+
+            color: #526078;
+
+            font-size: 17px;
+        }
+
+        .empty-state p {
+            margin: 0;
+
+            color: #8a95a5;
+
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1050px) {
+
+            .jobs-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 800px) {
+
+            .admin-sidebar {
+                position: relative;
+
+                width: 100%;
+                height: auto;
+
+                border-right: none;
+
+                border-bottom: 1px solid #e8edf3;
+            }
+
+            .admin-nav {
+                flex-direction: row;
+
+                flex-wrap: wrap;
+            }
+
+            .admin-main {
+                margin-left: 0;
+
+                padding: 25px 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .page-header {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                gap: 12px;
+            }
+
+            .job-details {
+                grid-template-columns: 1fr;
+            }
+
+            .job-actions {
+                flex-wrap: wrap;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="admin-page">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-brand">
+
+            <h2>Smart Campus</h2>
+
+            <p>Placement Administration</p>
+
+        </div>
+
+
+        <nav class="admin-nav">
+
+            <a href="{{ url_for('admin.dashboard') }}">
+
+                <span class="nav-icon">⌂</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="{{ url_for('admin.manage_jobs') }}"
+               class="active">
+
+                <span class="nav-icon">▣</span>
+
+                Manage Jobs
+
+            </a>
+
+
+            <a href="{{ url_for('admin.manage_students') }}">
+
+                <span class="nav-icon">♙</span>
+
+                Manage Students
+
+            </a>
+
+
+            <a href="{{ url_for('admin.applications') }}">
+
+                <span class="nav-icon">✓</span>
+
+                Applications
+
+            </a>
+
+        </nav>
+
+
+        <div class="admin-logout">
+
+            <a href="{{ url_for('auth.logout') }}">
+
+                <span class="nav-icon">↪</span>
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="admin-main">
+
+
+        <!-- PAGE HEADER -->
+
+        <header class="page-header">
+
+            <div>
+
+                <h1>Manage Jobs</h1>
+
+                <p>
+                    Review company-submitted placement
+                    opportunities.
+                </p>
+
+            </div>
+
+
+            <div class="job-count">
+
+                {{ jobs|length }} Jobs
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             PENDING APPROVAL
+        ================================================== -->
+
+        <section class="jobs-section">
+
+            <div class="section-header">
+
+                <div class="section-title">
+
+                    <h2>Pending Approval</h2>
+
+                    <span class="section-count">
+                        {{ pending_jobs|length }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            {% if pending_jobs %}
+
+                <div class="jobs-list">
+
+                    {% for job in pending_jobs %}
+
+                        <article class="job-card">
+
+
+                            <div class="job-top">
+
+                                <div class="company-avatar">
+                                    💼
+                                </div>
+
+
+                                <div class="job-title-area">
+
+                                    <h3>
+                                        {{ job.job_title }}
+                                    </h3>
+
+
+                                    <p class="company-name">
+
+                                        {% if job.company %}
+                                            {{ job.company.company_name }}
+                                        {% else %}
+                                            {{ job.company_name or "Company" }}
+                                        {% endif %}
+
+                                    </p>
+
+                                </div>
+
+
+                                <span class="status-badge status-pending">
+                                    Pending
+                                </span>
+
+                            </div>
+
+
+
+                            <div class="job-details">
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Location
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {{ job.location or "Not specified" }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Job Type
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {{ job.job_type or "Not specified" }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Salary
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {{ job.salary or "Not specified" }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Minimum CGPA
+                                    </span>
+
+                                    <span class="detail-value">
+
+                                        {% if job.minimum_cgpa %}
+                                            {{ job.minimum_cgpa }}
+                                        {% else %}
+                                            No minimum
+                                        {% endif %}
+
+                                    </span>
+
+                                </div>
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Graduation Year
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {{ job.graduation_year or "Any" }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Deadline
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {{ job.deadline or "Not specified" }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            {% if job.required_skills or job.eligible_departments or job.backlog_requirement %}
+
+                                <div class="job-extra">
+
+
+                                    {% if job.required_skills %}
+
+                                        <div class="extra-row">
+
+                                            <span class="extra-label">
+                                                Required Skills
+                                            </span>
+
+                                            <span class="extra-value">
+                                                {{ job.required_skills }}
+                                            </span>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    {% if job.eligible_departments %}
+
+                                        <div class="extra-row">
+
+                                            <span class="extra-label">
+                                                Eligible Departments
+                                            </span>
+
+                                            <span class="extra-value">
+                                                {{ job.eligible_departments }}
+                                            </span>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    {% if job.backlog_requirement %}
+
+                                        <div class="extra-row">
+
+                                            <span class="extra-label">
+                                                Backlog Requirement
+                                            </span>
+
+                                            <span class="extra-value">
+                                                {{ job.backlog_requirement }}
+                                            </span>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                </div>
+
+                            {% endif %}
+
+
+
+                            {% if job.description %}
+
+                                <div class="job-description">
+
+                                    <p>
+                                        {{ job.description }}
+                                    </p>
+
+                                </div>
+
+                            {% endif %}
+
+
+
+                            <!-- ONLY APPROVE / REJECT -->
+
+                            <div class="job-actions">
+
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('admin.approve_job', job_id=job.id) }}"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="action-btn approve-btn"
+                                    >
+                                        ✓ Approve
+                                    </button>
+
+                                </form>
+
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('admin.reject_job', job_id=job.id) }}"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="action-btn reject-btn"
+                                        onclick="return confirm('Are you sure you want to reject this job?');"
+                                    >
+                                        ✕ Reject
+                                    </button>
+
+                                </form>
+
+
+                            </div>
+
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ✓
+                    </div>
+
+                    <h3>
+                        No Jobs Waiting for Approval
+                    </h3>
+
+                    <p>
+                        New jobs submitted by companies
+                        will appear here.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+
+        <!-- =================================================
+             PUBLISHED JOBS
+        ================================================== -->
+
+        <section class="jobs-section">
+
+            <div class="section-header">
+
+                <div class="section-title">
+
+                    <h2>Published Jobs</h2>
+
+                    <span class="section-count">
+                        {{ published_jobs|length }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            {% if published_jobs %}
+
+                <div class="jobs-list">
+
+                    {% for job in published_jobs %}
+
+                        <article class="job-card">
+
+
+                            <div class="job-top">
+
+                                <div class="company-avatar">
+                                    💼
+                                </div>
+
+
+                                <div class="job-title-area">
+
+                                    <h3>
+                                        {{ job.job_title }}
+                                    </h3>
+
+
+                                    <p class="company-name">
+
+                                        {% if job.company %}
+                                            {{ job.company.company_name }}
+                                        {% else %}
+                                            {{ job.company_name or "Company" }}
+                                        {% endif %}
+
+                                    </p>
+
+                                </div>
+
+
+                                <span class="status-badge status-published">
+                                    Published
+                                </span>
+
+                            </div>
+
+
+
+                            <div class="job-details">
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Location
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {{ job.location or "Not specified" }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Job Type
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {{ job.job_type or "Not specified" }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Salary
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {{ job.salary or "Not specified" }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Minimum CGPA
+                                    </span>
+
+                                    <span class="detail-value">
+
+                                        {% if job.minimum_cgpa %}
+                                            {{ job.minimum_cgpa }}
+                                        {% else %}
+                                            No minimum
+                                        {% endif %}
+
+                                    </span>
+
+                                </div>
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Graduation Year
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {{ job.graduation_year or "Any" }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Deadline
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {{ job.deadline or "Not specified" }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            {% if job.required_skills or job.eligible_departments %}
+
+                                <div class="job-extra">
+
+
+                                    {% if job.required_skills %}
+
+                                        <div class="extra-row">
+
+                                            <span class="extra-label">
+                                                Required Skills
+                                            </span>
+
+                                            <span class="extra-value">
+                                                {{ job.required_skills }}
+                                            </span>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    {% if job.eligible_departments %}
+
+                                        <div class="extra-row">
+
+                                            <span class="extra-label">
+                                                Eligible Departments
+                                            </span>
+
+                                            <span class="extra-value">
+                                                {{ job.eligible_departments }}
+                                            </span>
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            {% endif %}
+
+
+
+                            {% if job.description %}
+
+                                <div class="job-description">
+
+                                    <p>
+                                        {{ job.description }}
+                                    </p>
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <!-- NO EDIT / DELETE -->
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        📋
+                    </div>
+
+                    <h3>
+                        No Published Jobs
+                    </h3>
+
+                    <p>
+                        Jobs approved by the placement
+                        administration will appear here.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+
+        <!-- =================================================
+             REJECTED JOBS
+        ================================================== -->
+
+        <section class="jobs-section">
+
+            <div class="section-header">
+
+                <div class="section-title">
+
+                    <h2>Rejected Jobs</h2>
+
+                    <span class="section-count">
+                        {{ rejected_jobs|length }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            {% if rejected_jobs %}
+
+                <div class="jobs-list">
+
+                    {% for job in rejected_jobs %}
+
+                        <article class="job-card">
+
+
+                            <div class="job-top">
+
+                                <div class="company-avatar">
+                                    💼
+                                </div>
+
+
+                                <div class="job-title-area">
+
+                                    <h3>
+                                        {{ job.job_title }}
+                                    </h3>
+
+
+                                    <p class="company-name">
+
+                                        {% if job.company %}
+                                            {{ job.company.company_name }}
+                                        {% else %}
+                                            {{ job.company_name or "Company" }}
+                                        {% endif %}
+
+                                    </p>
+
+                                </div>
+
+
+                                <span class="status-badge status-rejected">
+                                    Rejected
+                                </span>
+
+                            </div>
+
+
+
+                            <div class="job-details">
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Location
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {{ job.location or "Not specified" }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Job Type
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {{ job.job_type or "Not specified" }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Salary
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {{ job.salary or "Not specified" }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="detail-item">
+
+                                    <span class="detail-label">
+                                        Deadline
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {{ job.deadline or "Not specified" }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+
+                            {% if job.description %}
+
+                                <div class="job-description">
+
+                                    <p>
+                                        {{ job.description }}
+                                    </p>
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <!-- NO EDIT / DELETE -->
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ✓
+                    </div>
+
+                    <h3>
+                        No Rejected Jobs
+                    </h3>
+
+                    <p>
+                        Jobs rejected by the placement
+                        administration will appear here.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

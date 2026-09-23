@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Student Details | Smart Campus</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =========================================
+           PAGE
+           ========================================= */
+
+        .admin-page {
+            min-height: 100vh;
+            background: var(--background);
+        }
+
+
+        /* =========================================
+           SIDEBAR
+           ========================================= */
+
+        .admin-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 250px;
+            height: 100vh;
+
+            background: #f4f7fc;
+            border-right: 1px solid #e8edf3;
+
+            padding: 28px 18px;
+
+            box-sizing: border-box;
+
+            z-index: 100;
+        }
+
+        .admin-brand {
+            padding: 0 14px 28px;
+
+            border-bottom: 1px solid #e8edf3;
+
+            margin-bottom: 22px;
+        }
+
+        .admin-brand h2 {
+            margin: 0;
+
+            font-size: 22px;
+            font-weight: 700;
+
+            color: #526078;
+        }
+
+        .admin-brand p {
+            margin: 5px 0 0;
+
+            font-size: 13px;
+
+            color: #7f8b9d;
+        }
+
+
+        /* =========================================
+           NAVIGATION
+           ========================================= */
+
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+        .admin-nav a,
+        .admin-logout a {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            text-decoration: none;
+
+            color: #526078;
+
+            font-size: 14px;
+            font-weight: 500;
+
+            transition: all 0.2s ease;
+        }
+
+        .admin-nav a:hover,
+        .admin-logout a:hover {
+            background: #eef3fb;
+            color: #668bd8;
+
+            transform: translateX(2px);
+        }
+
+        .admin-nav a.active {
+            background: #eef3fb;
+
+            color: #668bd8;
+
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+
+            text-align: center;
+
+            font-size: 17px;
+        }
+
+        .admin-logout {
+            margin-top: 25px;
+
+            padding-top: 22px;
+
+            border-top: 1px solid #e8edf3;
+        }
+
+        .admin-logout a {
+            color: #b87979;
+        }
+
+        .admin-logout a:hover {
+            background: #fdf3f3;
+            color: #b15f5f;
+        }
+
+
+        /* =========================================
+           MAIN CONTENT
+           ========================================= */
+
+        .admin-main {
+            margin-left: 250px;
+
+            min-height: 100vh;
+
+            padding: 38px 45px;
+
+            box-sizing: border-box;
+        }
+
+
+        /* =========================================
+           TOP HEADER
+           ========================================= */
+
+        .page-header {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 25px;
+        }
+
+        .back-link {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #668bd8;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            text-decoration: none;
+
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #526fae;
+        }
+
+
+        /* =========================================
+           PROFILE HEADER
+           ========================================= */
+
+        .profile-header {
+            display: flex;
+
+            align-items: center;
+
+            gap: 18px;
+
+            background: #ffffff;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 16px;
+
+            padding: 25px 28px;
+
+            margin-bottom: 22px;
+
+            box-shadow:
+                0 5px 18px rgba(100, 116, 139, 0.07);
+        }
+
+        .profile-avatar {
+            width: 65px;
+            height: 65px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            border-radius: 17px;
+
+            background: #f1f5ff;
+
+            font-size: 28px;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info h1 {
+            margin: 0 0 5px;
+
+            color: #3f4b5f;
+
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .profile-id {
+            margin: 0;
+
+            color: #7f8b9d;
+
+            font-size: 13px;
+        }
+
+        .profile-status {
+            padding: 8px 13px;
+
+            border-radius: 20px;
+
+            background: #eff8f2;
+
+            color: #659779;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+
+        /* =========================================
+           TWO COLUMN INFORMATION
+           ========================================= */
+
+        .info-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 20px;
+
+            margin-bottom: 22px;
+        }
+
+        .info-card {
+            background: #ffffff;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 16px;
+
+            padding: 24px;
+
+            box-shadow:
+                0 5px 18px rgba(100, 116, 139, 0.06);
+        }
+
+        .card-heading {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 21px;
+
+            padding-bottom: 15px;
+
+            border-bottom: 1px solid #edf0f4;
+        }
+
+        .card-heading-icon {
+            width: 35px;
+            height: 35px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 9px;
+
+            background: #f1f5ff;
+
+            font-size: 16px;
+        }
+
+        .card-heading h2 {
+            margin: 0;
+
+            color: #4f5d73;
+
+            font-size: 17px;
+            font-weight: 650;
+        }
+
+
+        /* =========================================
+           INFORMATION ITEMS
+           ========================================= */
+
+        .info-list {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 18px 25px;
+        }
+
+        .info-item {
+            min-width: 0;
+        }
+
+        .info-item.full {
+            grid-column: 1 / -1;
+        }
+
+        .info-label {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #9aa4b3;
+
+            font-size: 10px;
+            font-weight: 600;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.4px;
+        }
+
+        .info-value {
+            display: block;
+
+            color: #526078;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            line-height: 1.4;
+
+            overflow-wrap: anywhere;
+        }
+
+
+        /* =========================================
+           ACADEMIC CARD
+           ========================================= */
+
+        .academic-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 16px;
+        }
+
+        .academic-item {
+            padding: 15px;
+
+            border-radius: 11px;
+
+            background: #fbfcfe;
+
+            border: 1px solid #edf0f4;
+        }
+
+        .academic-item span {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #9aa4b3;
+
+            font-size: 10px;
+            font-weight: 600;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.3px;
+        }
+
+        .academic-item strong {
+            color: #526078;
+
+            font-size: 16px;
+            font-weight: 650;
+        }
+
+
+        /* =========================================
+           SKILLS
+           ========================================= */
+
+        .skills-card {
+            background: #ffffff;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 16px;
+
+            padding: 24px;
+
+            margin-bottom: 22px;
+
+            box-shadow:
+                0 5px 18px rgba(100, 116, 139, 0.06);
+        }
+
+        .skills-list {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 9px;
+        }
+
+        .skill-pill {
+            display: inline-flex;
+
+            align-items: center;
+
+            padding: 8px 12px;
+
+            border-radius: 20px;
+
+            background: #f1f5ff;
+
+            border: 1px solid #e0e8f7;
+
+            color: #668bd8;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .no-skills {
+            margin: 0;
+
+            color: #8a95a5;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================
+           APPLICATIONS
+           ========================================= */
+
+        .applications-card {
+            background: #ffffff;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 16px;
+
+            padding: 24px;
+
+            box-shadow:
+                0 5px 18px rgba(100, 116, 139, 0.06);
+        }
+
+        .applications-header {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .applications-header h2 {
+            margin: 0;
+
+            color: #4f5d73;
+
+            font-size: 18px;
+            font-weight: 650;
+        }
+
+        .application-count {
+            padding: 7px 11px;
+
+            border-radius: 15px;
+
+            background: #f1f5ff;
+
+            color: #668bd8;
+
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+
+        /* =========================================
+           APPLICATION ITEM
+           ========================================= */
+
+        .application-item {
+            padding: 20px;
+
+            border: 1px solid #edf0f4;
+
+            border-radius: 13px;
+
+            background: #fbfcfe;
+
+            margin-bottom: 13px;
+        }
+
+        .application-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .application-top {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 13px;
+
+            margin-bottom: 17px;
+        }
+
+        .company-icon {
+            width: 43px;
+            height: 43px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            border-radius: 11px;
+
+            background: #f1f5ff;
+
+            font-size: 18px;
+        }
+
+        .application-title {
+            flex: 1;
+        }
+
+        .application-title h3 {
+            margin: 0 0 4px;
+
+            color: #3f4b5f;
+
+            font-size: 16px;
+        }
+
+        .application-title p {
+            margin: 0;
+
+            color: #7f8b9d;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================================
+           STATUS BADGES
+           ========================================= */
+
+        .status-badge {
+            padding: 6px 10px;
+
+            border-radius: 15px;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            white-space: nowrap;
+        }
+
+        .status-applied {
+            background: #f1f4f8;
+
+            color: #708099;
+        }
+
+        .status-shortlisted {
+            background: #f0f5fb;
+
+            color: #7095b5;
+        }
+
+        .status-interview {
+            background: #fff8eb;
+
+            color: #aa8957;
+        }
+
+        .status-selected {
+            background: #eff8f2;
+
+            color: #659779;
+        }
+
+        .status-rejected {
+            background: #fdf3f3;
+
+            color: #b87979;
+        }
+
+
+        /* =========================================
+           APPLICATION DETAILS
+           ========================================= */
+
+        .application-details {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 12px;
+
+            padding: 15px 0;
+
+            border-top: 1px solid #e9edf2;
+
+            border-bottom: 1px solid #e9edf2;
+
+            margin-bottom: 16px;
+        }
+
+        .application-detail span {
+            display: block;
+
+            margin-bottom: 4px;
+
+            color: #9aa4b3;
+
+            font-size: 10px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.3px;
+        }
+
+        .application-detail strong {
+            color: #526078;
+
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================================
+           UPDATE STATUS
+           ========================================= */
+
+        .status-form {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+        .status-form label {
+            color: #68758a;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-form select {
+            padding: 9px 11px;
+
+            border: 1px solid #dfe6ef;
+
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            color: #526078;
+
+            font-size: 12px;
+
+            outline: none;
+
+            cursor: pointer;
+        }
+
+        .status-form select:focus {
+            border-color: #a9bce5;
+
+            box-shadow:
+                0 0 0 3px #f1f5ff;
+        }
+
+        .update-btn {
+            padding: 9px 14px;
+
+            border: none;
+
+            border-radius: 8px;
+
+            background: #7c9fe6;
+
+            color: #ffffff;
+
+            font-size: 12px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: all 0.2s ease;
+        }
+
+        .update-btn:hover {
+            background: #668bd8;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================================
+           EMPTY APPLICATION STATE
+           ========================================= */
+
+        .empty-state {
+            padding: 40px 20px;
+
+            text-align: center;
+
+            border: 1px dashed #dce3ec;
+
+            border-radius: 12px;
+
+            background: #fbfcfe;
+        }
+
+        .empty-icon {
+            width: 50px;
+            height: 50px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 12px;
+
+            border-radius: 13px;
+
+            background: #f1f5ff;
+
+            font-size: 21px;
+        }
+
+        .empty-state p {
+            margin: 0;
+
+            color: #8a95a5;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================
+           BOTTOM BACK LINK
+           ========================================= */
+
+        .bottom-back {
+            margin-top: 24px;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+
+        @media (max-width: 1000px) {
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .admin-sidebar {
+                position: relative;
+
+                width: 100%;
+                height: auto;
+
+                border-right: none;
+
+                border-bottom: 1px solid #e8edf3;
+            }
+
+            .admin-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .admin-main {
+                margin-left: 0;
+
+                padding: 25px 20px;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .profile-header {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .profile-status {
+                align-self: flex-start;
+            }
+
+            .info-list,
+            .academic-grid,
+            .application-details {
+                grid-template-columns: 1fr;
+            }
+
+            .info-item.full {
+                grid-column: auto;
+            }
+
+            .application-top {
+                flex-wrap: wrap;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="admin-page">
+
+
+    <!-- =========================================
+         SIDEBAR
+         ========================================= -->
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-brand">
+
+            <h2>Smart Campus</h2>
+
+            <p>Placement Administration</p>
+
+        </div>
+
+
+        <nav class="admin-nav">
+
+            <a href="{{ url_for('admin.dashboard') }}">
+
+                <span class="nav-icon">⌂</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="{{ url_for('admin.manage_jobs') }}">
+
+                <span class="nav-icon">▣</span>
+
+                Manage Jobs
+
+            </a>
+
+
+            <a href="{{ url_for('admin.manage_students') }}"
+               class="active">
+
+                <span class="nav-icon">♙</span>
+
+                Manage Students
+
+            </a>
+
+
+            <a href="{{ url_for('admin.applications') }}">
+
+                <span class="nav-icon">✓</span>
+
+                Applications
+
+            </a>
+
+        </nav>
+
+
+        <div class="admin-logout">
+
+            <a href="{{ url_for('auth.logout') }}">
+
+                <span class="nav-icon">↪</span>
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         MAIN CONTENT
+         ========================================= -->
+
+    <main class="admin-main">
+
+
+        <!-- =====================================
+             HEADER
+             ===================================== -->
+
+        <div class="page-header">
+
+            <a
+                href="{{ url_for('admin.manage_students') }}"
+                class="back-link"
+            >
+                ← Back to Students
+            </a>
+
+        </div>
+
+
+
+        <!-- =====================================
+             STUDENT PROFILE HEADER
+             ===================================== -->
+
+        <section class="profile-header">
+
+            <div class="profile-avatar">
+                👨‍🎓
+            </div>
+
+
+            <div class="profile-info">
+
+                <h1>
+                    {{ student.user.name }}
+                </h1>
+
+                <p class="profile-id">
+                    Student ID: {{ student.student_id }}
+                </p>
+
+            </div>
+
+
+            <div class="profile-status">
+                Student Profile
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             PERSONAL + ACADEMIC
+             ===================================== -->
+
+        <div class="info-grid">
+
+
+            <!-- PERSONAL DETAILS -->
+
+            <section class="info-card">
+
+                <div class="card-heading">
+
+                    <div class="card-heading-icon">
+                        👤
+                    </div>
+
+                    <h2>
+                        Personal Details
+                    </h2>
+
+                </div>
+
+
+                <div class="info-list">
+
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Name
+                        </span>
+
+                        <span class="info-value">
+                            {{ student.user.name }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <span class="info-label">
+                            Student ID
+                        </span>
+
+                        <span class="info-value">
+                            {{ student.student_id }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="info-item full">
+
+                        <span class="info-label">
+                            Email
+                        </span>
+
+                        <span class="info-value">
+                            {{ student.user.email }}
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+
+            <!-- ACADEMIC DETAILS -->
+
+            <section class="info-card">
+
+                <div class="card-heading">
+
+                    <div class="card-heading-icon">
+                        🎓
+                    </div>
+
+                    <h2>
+                        Academic Details
+                    </h2>
+
+                </div>
+
+
+                <div class="academic-grid">
+
+
+                    <div class="academic-item">
+
+                        <span>
+                            Department
+                        </span>
+
+                        <strong>
+                            {{ student.department }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="academic-item">
+
+                        <span>
+                            Course
+                        </span>
+
+                        <strong>
+                            {{ student.course }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="academic-item">
+
+                        <span>
+                            Graduation Year
+                        </span>
+
+                        <strong>
+                            {{ student.graduation_year }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="academic-item">
+
+                        <span>
+                            Active Backlogs
+                        </span>
+
+                        <strong>
+                            {{ student.active_backlogs }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="academic-item">
+
+                        <span>
+                            10th Percentage
+                        </span>
+
+                        <strong>
+                            {{ student.tenth_percentage }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="academic-item">
+
+                        <span>
+                            12th Percentage
+                        </span>
+
+                        <strong>
+                            {{ student.twelfth_percentage }}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="academic-item">
+
+                        <span>
+                            Current CGPA
+                        </span>
+
+                        <strong>
+                            {{ student.current_cgpa }}
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+
+
+        <!-- =====================================
+             SKILLS
+             ===================================== -->
+
+        <section class="skills-card">
+
+            <div class="card-heading">
+
+                <div class="card-heading-icon">
+                    💻
+                </div>
+
+                <h2>
+                    Skills
+                </h2>
+
+            </div>
+
+
+            {% if student.skills %}
+
+                <div class="skills-list">
+
+                    {% for skill in student.skills %}
+
+                        <span class="skill-pill">
+                            {{ skill.skill_name }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p class="no-skills">
+                    No skills added by this student.
+                </p>
+
+            {% endif %}
+
+
+        </section>
+
+
+
+        <!-- =====================================
+             APPLICATIONS
+             ===================================== -->
+
+        <section class="applications-card">
+
+
+            <div class="applications-header">
+
+                <h2>
+                    Applications
+                </h2>
+
+                <div class="application-count">
+                    {{ applications|length }} Applications
+                </div>
+
+            </div>
+
+
+
+            {% if applications %}
+
+
+                {% for application in applications %}
+
+                    <article class="application-item">
+
+
+                        <!-- APPLICATION HEADER -->
+
+                        <div class="application-top">
+
+
+                            <div class="company-icon">
+                                💼
+                            </div>
+
+
+                            <div class="application-title">
+
+                                <h3>
+                                    {{ application.job.job_title }}
+                                </h3>
+
+                                <p>
+                                    {{ application.job.company_name }}
+                                </p>
+
+                            </div>
+
+
+                            {% if application.status == "Applied" %}
+
+                                <span class="status-badge status-applied">
+                                    Applied
+                                </span>
+
+                            {% elif application.status == "Shortlisted" %}
+
+                                <span class="status-badge status-shortlisted">
+                                    Shortlisted
+                                </span>
+
+                            {% elif application.status == "Interview" %}
+
+                                <span class="status-badge status-interview">
+                                    Interview
+                                </span>
+
+                            {% elif application.status == "Selected" %}
+
+                                <span class="status-badge status-selected">
+                                    Selected
+                                </span>
+
+                            {% elif application.status == "Rejected" %}
+
+                                <span class="status-badge status-rejected">
+                                    Rejected
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-badge status-applied">
+                                    {{ application.status }}
+                                </span>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+
+                        <!-- APPLICATION DETAILS -->
+
+                        <div class="application-details">
+
+
+                            <div class="application-detail">
+
+                                <span>
+                                    Company
+                                </span>
+
+                                <strong>
+                                    {{ application.job.company_name }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="application-detail">
+
+                                <span>
+                                    Location
+                                </span>
+
+                                <strong>
+                                    {{ application.job.location }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="application-detail">
+
+                                <span>
+                                    Job Type
+                                </span>
+
+                                <strong>
+                                    {{ application.job.job_type }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="application-detail">
+
+                                <span>
+                                    Applied On
+                                </span>
+
+                                <strong>
+                                    {{ application.application_date.strftime("%d-%m-%Y") }}
+                                </strong>
+
+                            </div>
+
+
+                            <div class="application-detail">
+
+                                <span>
+                                    Current Status
+                                </span>
+
+                                <strong>
+                                    {{ application.status }}
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+
+
+                        <!-- UPDATE STATUS -->
+
+                        <form
+                            action="{{ url_for(
+                                'admin.update_student_application_status',
+                                student_id=student.id,
+                                application_id=application.id
+                            ) }}"
+                            method="POST"
+                            class="status-form"
+                        >
+
+                            <label>
+                                Change Status
+                            </label>
+
+
+                            <select name="status">
+
+
+                                <option
+                                    value="Applied"
+                                    {% if application.status == "Applied" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Applied
+                                </option>
+
+
+                                <option
+                                    value="Shortlisted"
+                                    {% if application.status == "Shortlisted" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Shortlisted
+                                </option>
+
+
+                                <option
+                                    value="Interview"
+                                    {% if application.status == "Interview" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Interview
+                                </option>
+
+
+                                <option
+                                    value="Selected"
+                                    {% if application.status == "Selected" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Selected
+                                </option>
+
+
+                                <option
+                                    value="Rejected"
+                                    {% if application.status == "Rejected" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Rejected
+                                </option>
+
+
+                            </select>
+
+
+                            <button
+                                type="submit"
+                                class="update-btn"
+                            >
+                                Update Status
+                            </button>
+
+                        </form>
+
+
+                    </article>
+
+                {% endfor %}
+
+
+            {% else %}
+
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        📄
+                    </div>
+
+                    <p>
+                        This student has not applied for any jobs yet.
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </section>
+
+
+
+        <!-- =====================================
+             BOTTOM BACK LINK
+             ===================================== -->
+
+        <div class="bottom-back">
+
+            <a
+                href="{{ url_for('admin.manage_students') }}"
+                class="back-link"
+            >
+                ← Back to Students
+            </a>
+
+        </div>
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

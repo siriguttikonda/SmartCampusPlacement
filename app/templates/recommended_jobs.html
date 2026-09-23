@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Recommended Jobs - Smart Campus</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =========================================================
+           RECOMMENDED JOBS
+           Student Light Theme
+           ========================================================= */
+
+
+        /* =========================================================
+           SIDEBAR
+           ========================================================= */
+
+        .sidebar {
+            background: #ffffff;
+            color: #1e293b;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .sidebar h2 {
+            color: #1e293b;
+        }
+
+        .sidebar a {
+            color: #64748b;
+        }
+
+        .sidebar a:hover {
+            background: #f5f7ff;
+            color: #4f5fc7;
+        }
+
+        .sidebar a.active {
+            background: #eef1ff;
+            color: #4f5fc7;
+        }
+
+        .sidebar .logout,
+        .sidebar .logout-link {
+            color: #d95c5c;
+        }
+
+        .sidebar .logout:hover,
+        .sidebar .logout-link:hover {
+            background: #fcecec;
+            color: #c94d4d;
+        }
+
+
+        /* =========================================================
+           MAIN HEADER
+           ========================================================= */
+
+        .top-header {
+            margin-bottom: 22px;
+        }
+
+        .top-header h1 {
+            color: #1e293b;
+        }
+
+        .header-subtitle {
+            color: #718096;
+        }
+
+
+        /* =========================================================
+           INTRO CARD
+           ========================================================= */
+
+        .recommended-intro {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            margin-bottom: 22px;
+            padding: 20px 22px;
+
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+
+            box-shadow: 0 2px 6px rgba(51, 65, 85, 0.04);
+        }
+
+        .recommended-intro-icon {
+            width: 48px;
+            height: 48px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: #eef1ff;
+            color: #5b6ee1;
+
+            font-size: 21px;
+        }
+
+        .recommended-intro h2 {
+            margin: 0 0 5px;
+
+            color: #1e293b;
+
+            font-size: 17px;
+        }
+
+        .recommended-intro p {
+            margin: 0;
+
+            color: #718096;
+
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+
+        /* =========================================================
+           JOB CARD
+           ========================================================= */
+
+        .recommended-job-card {
+            background: #ffffff;
+
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+
+            box-shadow: 0 2px 6px rgba(51, 65, 85, 0.04);
+
+            transition: 0.2s ease;
+        }
+
+        .recommended-job-card:hover {
+            border-color: #cfd6f5;
+
+            box-shadow:
+                0 10px 25px rgba(51, 65, 85, 0.07);
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================================================
+           JOB HEADER
+           ========================================================= */
+
+        .job-card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .company-avatar {
+            width: 48px;
+            height: 48px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: #eef1ff;
+            color: #5b6ee1;
+
+            font-size: 19px;
+            font-weight: 700;
+        }
+
+        .job-title-area {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .job-title-area h2 {
+            margin: 0 0 4px;
+
+            color: #1e293b;
+
+            font-size: 18px;
+        }
+
+        .company-name {
+            margin: 0;
+
+            color: #718096;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           RECOMMENDED BADGE
+           ========================================================= */
+
+        .badge.success {
+            background: #e8f7ef;
+            color: #18794e;
+
+            border: 1px solid #cceedd;
+        }
+
+
+        /* =========================================================
+           JOB META
+           ========================================================= */
+
+        .job-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+
+            margin-top: 16px;
+
+            color: #64748b;
+
+            font-size: 12px;
+        }
+
+        .job-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+
+        /* =========================================================
+           ELIGIBILITY
+           ========================================================= */
+
+        .eligibility-box {
+            margin-top: 18px;
+
+            padding: 15px 16px;
+
+            background: #f6fbf8;
+
+            border: 1px solid #dcefe5;
+            border-radius: 12px;
+        }
+
+        .eligibility-title {
+            color: #18794e;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .eligibility-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 22px;
+
+            margin-top: 9px;
+
+            color: #64748b;
+
+            font-size: 12px;
+        }
+
+        .eligibility-details strong {
+            color: #1e293b;
+        }
+
+
+        /* =========================================================
+           DESCRIPTION
+           ========================================================= */
+
+        .job-description {
+            margin-top: 20px;
+            padding-top: 18px;
+
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .job-description h3,
+        .job-skills h3 {
+            margin: 0 0 8px;
+
+            color: #334155;
+
+            font-size: 13px;
+        }
+
+        .job-description p {
+            margin: 0;
+
+            color: #64748b;
+
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+
+        /* =========================================================
+           REQUIRED SKILLS
+           ========================================================= */
+
+        .job-skills {
+            margin-top: 18px;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        .skill-tag {
+            padding: 5px 10px;
+
+            background: #eef1ff;
+            color: #4f5fc7;
+
+            border: 1px solid #d8def9;
+            border-radius: 999px;
+
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+
+        /* =========================================================
+           JOB FOOTER
+           ========================================================= */
+
+        .job-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-top: 20px;
+            padding-top: 18px;
+
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .job-deadline {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .deadline-label {
+            color: #718096;
+
+            font-size: 11px;
+        }
+
+        .job-deadline strong {
+            color: #334155;
+
+            font-size: 12px;
+        }
+
+        .job-card-footer .btn {
+            background: #5b6ee1;
+            color: #ffffff;
+        }
+
+        .job-card-footer .btn:hover {
+            background: #4f5fc7;
+
+            box-shadow:
+                0 4px 10px rgba(91, 110, 225, 0.18);
+        }
+
+
+        /* =========================================================
+           EMPTY STATE
+           ========================================================= */
+
+        .empty-state {
+            background: #ffffff;
+
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+
+            box-shadow:
+                0 2px 6px rgba(51, 65, 85, 0.04);
+        }
+
+        .empty-state-icon {
+            background: #f1f3f9;
+            color: #718096;
+        }
+
+
+        /* =========================================================
+           CAREER TIP
+           ========================================================= */
+
+        .career-tip {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+
+            margin-top: 22px;
+            padding: 16px 18px;
+
+            background: #fff6df;
+
+            border: 1px solid #f3e5bd;
+            border-radius: 14px;
+        }
+
+        .career-tip-icon {
+            width: 38px;
+            height: 38px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #fff0c7;
+
+            border-radius: 10px;
+        }
+
+        .career-tip strong {
+            color: #795b18;
+
+            font-size: 13px;
+        }
+
+        .career-tip p {
+            margin: 4px 0 0;
+
+            color: #806b3c;
+
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+
+        /* =========================================================
+           MOBILE
+           ========================================================= */
+
+        @media (max-width: 700px) {
+
+            .recommended-intro {
+                align-items: flex-start;
+            }
+
+            .job-card-header {
+                align-items: flex-start;
+            }
+
+            .job-card-footer {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .job-card-footer .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .eligibility-details {
+                flex-direction: column;
+                gap: 6px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         SIDEBAR
+         ========================================================= -->
+
+    <aside class="sidebar">
+
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                SC
+            </div>
+
+            <div>
+
+                <div class="brand-name">
+                    Smart Campus
+                </div>
+
+                <div class="brand-subtitle">
+                    Career Portal
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+
+            <!-- Dashboard -->
+
+            <a href="{{ url_for('student.dashboard') }}"
+               class="sidebar-link">
+
+                <span class="menu-icon">⌂</span>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <!-- Profile -->
+
+            <a href="{{ url_for('student.profile') }}"
+               class="sidebar-link">
+
+                <span class="menu-icon">◉</span>
+
+                <span>
+                    My Profile
+                </span>
+
+            </a>
+
+
+            <!-- Skills -->
+
+            <a href="{{ url_for('student.skills') }}"
+               class="sidebar-link">
+
+                <span class="menu-icon">◆</span>
+
+                <span>
+                    My Skills
+                </span>
+
+            </a>
+
+
+            <!-- Job Opportunities -->
+
+            <a href="{{ url_for('student.jobs') }}"
+               class="sidebar-link">
+
+                <span class="menu-icon">▣</span>
+
+                <span>
+                    Job Opportunities
+                </span>
+
+            </a>
+
+
+            <!-- Recommended Jobs -->
+
+            <a href="{{ url_for('student.recommended_jobs') }}"
+               class="sidebar-link active">
+
+                <span class="menu-icon">★</span>
+
+                <span>
+                    Recommended Jobs
+                </span>
+
+            </a>
+
+
+            <!-- My Applications -->
+
+            <a href="{{ url_for('student.my_applications') }}"
+               class="sidebar-link">
+
+                <span class="menu-icon">✓</span>
+
+                <span>
+                    My Applications
+                </span>
+
+            </a>
+
+
+            <!-- Skill Gap -->
+
+            <a href="{{ url_for('student.skill_gap') }}"
+               class="sidebar-link">
+
+                <span class="menu-icon">↗</span>
+
+                <span>
+                    Skill Gap
+                </span>
+
+            </a>
+
+
+        </nav>
+
+
+        <!-- Logout -->
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="sidebar-link logout-link">
+
+                <span class="menu-icon">↪</span>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </div>
+
+
+    </aside>
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+         ========================================================= -->
+
+    <main class="main-content">
+
+
+        <!-- HEADER -->
+
+        <header class="top-header">
+
+            <div>
+
+                <h1>
+                    Recommended Jobs
+                </h1>
+
+                <p class="header-subtitle">
+                    Opportunities matched to your profile
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             INTRO
+             ===================================================== -->
+
+        <section class="section-card recommended-intro">
+
+
+            <div class="recommended-intro-icon">
+                ★
+            </div>
+
+
+            <div>
+
+                <h2>
+                    Jobs matched for you
+                </h2>
+
+                <p>
+                    These opportunities match your eligibility
+                    based on your academic profile and skills.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =====================================================
+             RECOMMENDED JOBS
+             ===================================================== -->
+
+        {% if jobs %}
+
+
+            <div class="job-list">
+
+
+                {% for job in jobs %}
+
+
+                    <article class="job-card recommended-job-card">
+
+
+                        <!-- =================================================
+                             JOB HEADER
+                             ================================================= -->
+
+                        <div class="job-card-header">
+
+
+                            <div class="company-avatar">
+
+                                {{ job.company.company_name[0]|upper
+                                   if job.company
+                                   else "C" }}
+
+                            </div>
+
+
+                            <div class="job-title-area">
+
+                                <h2>
+                                    {{ job.job_title }}
+                                </h2>
+
+
+                                <p class="company-name">
+
+                                    {{ job.company.company_name
+                                       if job.company
+                                       else "Company" }}
+
+                                </p>
+
+                            </div>
+
+
+                            <span class="badge success">
+
+                                ✓ Recommended
+
+                            </span>
+
+
+                        </div>
+
+
+                        <!-- =================================================
+                             JOB META
+                             ================================================= -->
+
+                        <div class="job-meta">
+
+
+                            <span>
+                                📍 {{ job.location }}
+                            </span>
+
+
+                            <span>
+                                💼 {{ job.job_type }}
+                            </span>
+
+
+                        </div>
+
+
+                        <!-- =================================================
+                             ELIGIBILITY
+                             ================================================= -->
+
+                        <div class="eligibility-box">
+
+
+                            <div class="eligibility-title">
+
+                                ✓ You meet the eligibility criteria
+
+                            </div>
+
+
+                            <div class="eligibility-details">
+
+
+                                <span>
+
+                                    CGPA:
+
+                                    <strong>
+                                        {{ job.minimum_cgpa }}
+                                    </strong>
+
+                                </span>
+
+
+                                <span>
+
+                                    Graduation:
+
+                                    <strong>
+                                        {{ job.graduation_year }}
+                                    </strong>
+
+                                </span>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- =================================================
+                             DESCRIPTION
+                             ================================================= -->
+
+                        <div class="job-description">
+
+
+                            <h3>
+                                About the role
+                            </h3>
+
+
+                            <p>
+                                {{ job.description }}
+                            </p>
+
+
+                        </div>
+
+
+                        <!-- =================================================
+                             REQUIRED SKILLS
+                             ================================================= -->
+
+                        <div class="job-skills">
+
+
+                            <h3>
+                                Required Skills
+                            </h3>
+
+
+                            <div class="skill-tags">
+
+
+                                {% if job.required_skills %}
+
+
+                                    {% for skill in job.required_skills.split(',') %}
+
+                                        <span class="skill-tag">
+                                            {{ skill.strip() }}
+                                        </span>
+
+                                    {% endfor %}
+
+
+                                {% else %}
+
+
+                                    <span class="skill-tag">
+                                        No specific skills listed
+                                    </span>
+
+
+                                {% endif %}
+
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- =================================================
+                             FOOTER
+                             ================================================= -->
+
+                        <div class="job-card-footer">
+
+
+                            <div class="job-deadline">
+
+
+                                <span class="deadline-label">
+                                    Application Deadline
+                                </span>
+
+
+                                <strong>
+                                    {{ job.deadline }}
+                                </strong>
+
+
+                            </div>
+
+
+                            <a href="{{ url_for('student.apply_job', job_id=job.id) }}"
+                               class="btn btn-primary">
+
+                                Apply Now
+
+                                <span>
+                                    →
+                                </span>
+
+                            </a>
+
+
+                        </div>
+
+
+                    </article>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        <!-- =====================================================
+             EMPTY STATE
+             ===================================================== -->
+
+        {% else %}
+
+
+            <section class="empty-state">
+
+
+                <div class="empty-state-icon">
+                    ★
+                </div>
+
+
+                <h2>
+                    No recommended jobs yet
+                </h2>
+
+
+                <p>
+                    We couldn't find any jobs that currently
+                    match your academic profile and skills.
+                </p>
+
+
+                <a href="{{ url_for('student.jobs') }}"
+                   class="btn btn-primary">
+
+                    Browse All Jobs
+
+                    <span>
+                        →
+                    </span>
+
+                </a>
+
+
+            </section>
+
+
+        {% endif %}
+
+
+        <!-- =====================================================
+             CAREER TIP
+             ===================================================== -->
+
+        <section class="career-tip">
+
+
+            <div class="career-tip-icon">
+                💡
+            </div>
+
+
+            <div>
+
+
+                <strong>
+                    Career Tip
+                </strong>
+
+
+                <p>
+                    Keep your profile and skills updated.
+                    New opportunities can become available
+                    as you build more relevant skills.
+                </p>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</body>
+
+</html>

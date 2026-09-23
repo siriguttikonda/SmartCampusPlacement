@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Companies | Smart Campus</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f6f8fc;
+            color: #3f4b5f;
+        }
+
+        .admin-page {
+            min-height: 100vh;
+        }
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .admin-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 250px;
+            height: 100vh;
+
+            background: #f4f7fc;
+            border-right: 1px solid #e8edf3;
+
+            padding: 28px 18px;
+
+            z-index: 100;
+        }
+
+        .admin-brand {
+            padding: 0 14px 28px;
+
+            border-bottom: 1px solid #e8edf3;
+
+            margin-bottom: 22px;
+        }
+
+        .admin-brand h2 {
+            margin: 0;
+
+            font-size: 22px;
+            font-weight: 700;
+
+            color: #526078;
+        }
+
+        .admin-brand p {
+            margin: 5px 0 0;
+
+            font-size: 13px;
+
+            color: #7f8b9d;
+        }
+
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+        .admin-nav a,
+        .admin-logout a {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            text-decoration: none;
+
+            color: #526078;
+
+            font-size: 14px;
+            font-weight: 500;
+
+            transition: all 0.2s ease;
+        }
+
+        .admin-nav a:hover,
+        .admin-logout a:hover {
+            background: #eef3fb;
+
+            color: #668bd8;
+
+            transform: translateX(2px);
+        }
+
+        .admin-nav a.active {
+            background: #eef3fb;
+
+            color: #668bd8;
+
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+
+            text-align: center;
+
+            font-size: 17px;
+        }
+
+        .admin-logout {
+            margin-top: 25px;
+
+            padding-top: 22px;
+
+            border-top: 1px solid #e8edf3;
+        }
+
+        .admin-logout a {
+            color: #b87979;
+        }
+
+        .admin-logout a:hover {
+            background: #fdf3f3;
+
+            color: #b15f5f;
+        }
+
+        /* =====================================================
+           MAIN CONTENT
+        ===================================================== */
+
+        .admin-main {
+            margin-left: 250px;
+
+            min-height: 100vh;
+
+            padding: 38px 45px;
+        }
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .page-header {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+
+            font-size: 30px;
+            font-weight: 700;
+
+            color: #3f4b5f;
+        }
+
+        .page-header p {
+            margin: 7px 0 0;
+
+            font-size: 14px;
+
+            color: #7f8b9d;
+        }
+
+        .company-count {
+            padding: 9px 15px;
+
+            border-radius: 20px;
+
+            background: #f1f5ff;
+
+            color: #668bd8;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* =====================================================
+           COMPANY GRID
+        ===================================================== */
+
+        .companies-list {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 20px;
+        }
+
+        /* =====================================================
+           COMPANY CARD
+        ===================================================== */
+
+        .company-card {
+            background: #ffffff;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 16px;
+
+            padding: 24px;
+
+            box-shadow:
+                0 5px 18px rgba(100, 116, 139, 0.06);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .company-card:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 10px 25px rgba(100, 116, 139, 0.10);
+        }
+
+        /* =====================================================
+           COMPANY HEADER
+        ===================================================== */
+
+        .company-top {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 14px;
+
+            margin-bottom: 20px;
+        }
+
+        .company-avatar {
+            width: 50px;
+            height: 50px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            border-radius: 14px;
+
+            background: #eef3ff;
+
+            color: #668bd8;
+
+            font-size: 21px;
+        }
+
+        .company-title {
+            flex: 1;
+        }
+
+        .company-title h2 {
+            margin: 0 0 5px;
+
+            font-size: 18px;
+
+            color: #3f4b5f;
+        }
+
+        .company-industry {
+            margin: 0;
+
+            font-size: 13px;
+
+            color: #7f8b9d;
+        }
+
+        /* =====================================================
+           COMPANY DETAILS
+        ===================================================== */
+
+        .company-details {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 13px;
+
+            padding: 17px 0;
+
+            border-top: 1px solid #edf0f4;
+
+            border-bottom: 1px solid #edf0f4;
+
+            margin-bottom: 17px;
+        }
+
+        .detail-item {
+            min-width: 0;
+        }
+
+        .detail-label {
+            display: block;
+
+            margin-bottom: 4px;
+
+            font-size: 11px;
+
+            color: #9aa4b3;
+        }
+
+        .detail-value {
+            display: block;
+
+            font-size: 13px;
+
+            color: #526078;
+
+            font-weight: 500;
+
+            word-break: break-word;
+        }
+
+        .detail-value a {
+            color: #668bd8;
+
+            text-decoration: none;
+        }
+
+        .detail-value a:hover {
+            text-decoration: underline;
+        }
+
+        /* =====================================================
+           DESCRIPTION
+        ===================================================== */
+
+        .company-description {
+            margin-bottom: 18px;
+        }
+
+        .company-description p {
+            margin: 0;
+
+            color: #68758a;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .company-footer {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            padding-top: 3px;
+        }
+
+        .company-jobs {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 7px 11px;
+
+            border-radius: 8px;
+
+            background: #f5f7fb;
+
+            color: #68758a;
+
+            font-size: 12px;
+
+            font-weight: 600;
+        }
+
+        .company-status {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            font-size: 12px;
+
+            color: #27845c;
+
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #53b987;
+        }
+
+        /* =====================================================
+           EMPTY STATE
+        ===================================================== */
+
+        .empty-state {
+            background: #ffffff;
+
+            border: 1px dashed #dce3ec;
+
+            border-radius: 16px;
+
+            padding: 55px 25px;
+
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 58px;
+            height: 58px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 16px;
+
+            border-radius: 15px;
+
+            background: #eef3ff;
+
+            font-size: 23px;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 8px;
+
+            color: #526078;
+
+            font-size: 18px;
+        }
+
+        .empty-state p {
+            margin: 0;
+
+            color: #8a95a5;
+
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1050px) {
+
+            .companies-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 800px) {
+
+            .admin-sidebar {
+                position: relative;
+
+                width: 100%;
+                height: auto;
+
+                border-right: none;
+
+                border-bottom: 1px solid #e8edf3;
+            }
+
+            .admin-nav {
+                flex-direction: row;
+
+                flex-wrap: wrap;
+            }
+
+            .admin-main {
+                margin-left: 0;
+
+                padding: 25px 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .page-header {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                gap: 12px;
+            }
+
+            .company-details {
+                grid-template-columns: 1fr;
+            }
+
+            .company-footer {
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                gap: 10px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="admin-page">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-brand">
+
+            <h2>Smart Campus</h2>
+
+            <p>Placement Administration</p>
+
+        </div>
+
+
+        <nav class="admin-nav">
+
+            <a href="{{ url_for('admin.dashboard') }}">
+
+                <span class="nav-icon">⌂</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="{{ url_for('admin.manage_jobs') }}">
+
+                <span class="nav-icon">▣</span>
+
+                Manage Jobs
+
+            </a>
+
+
+            <a href="{{ url_for('admin.manage_companies') }}"
+               class="active">
+
+                <span class="nav-icon">🏢</span>
+
+                Manage Companies
+
+            </a>
+
+
+            <a href="{{ url_for('admin.manage_students') }}">
+
+                <span class="nav-icon">♙</span>
+
+                Manage Students
+
+            </a>
+
+
+            <a href="{{ url_for('admin.applications') }}">
+
+                <span class="nav-icon">✓</span>
+
+                Applications
+
+            </a>
+
+        </nav>
+
+
+        <div class="admin-logout">
+
+            <a href="{{ url_for('auth.logout') }}">
+
+                <span class="nav-icon">↪</span>
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main class="admin-main">
+
+
+        <!-- HEADER -->
+
+        <header class="page-header">
+
+            <div>
+
+                <h1>Manage Companies</h1>
+
+                <p>
+                    View companies registered on the
+                    Smart Campus placement platform.
+                </p>
+
+            </div>
+
+
+            <div class="company-count">
+
+                {{ companies|length }} Companies
+
+            </div>
+
+        </header>
+
+
+
+        <!-- =================================================
+             COMPANIES
+        ================================================== -->
+
+        {% if companies %}
+
+            <div class="companies-list">
+
+                {% for company in companies %}
+
+                    <article class="company-card">
+
+
+                        <!-- COMPANY HEADER -->
+
+                        <div class="company-top">
+
+                            <div class="company-avatar">
+                                🏢
+                            </div>
+
+
+                            <div class="company-title">
+
+                                <h2>
+                                    {{ company.company_name }}
+                                </h2>
+
+                                <p class="company-industry">
+
+                                    {{ company.industry or "Industry not specified" }}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- COMPANY DETAILS -->
+
+                        <div class="company-details">
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Location
+                                </span>
+
+                                <span class="detail-value">
+                                    {{ company.location or "Not specified" }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Contact Email
+                                </span>
+
+                                <span class="detail-value">
+
+                                    {% if company.contact_email %}
+
+                                        <a href="mailto:{{ company.contact_email }}">
+                                            {{ company.contact_email }}
+                                        </a>
+
+                                    {% else %}
+
+                                        Not specified
+
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Contact Phone
+                                </span>
+
+                                <span class="detail-value">
+                                    {{ company.contact_phone or "Not specified" }}
+                                </span>
+
+                            </div>
+
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Website
+                                </span>
+
+                                <span class="detail-value">
+
+                                    {% if company.website %}
+
+                                        <a
+                                            href="{{ company.website }}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Visit Website
+                                        </a>
+
+                                    {% else %}
+
+                                        Not specified
+
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- DESCRIPTION -->
+
+                        {% if company.description %}
+
+                            <div class="company-description">
+
+                                <p>
+                                    {{ company.description }}
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+
+
+                        <!-- FOOTER -->
+
+                        <div class="company-footer">
+
+                            <div class="company-jobs">
+
+                                💼
+
+                                {{ company.jobs|length }}
+
+                                {% if company.jobs|length == 1 %}
+                                    Job
+                                {% else %}
+                                    Jobs
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="company-status">
+
+                                <span class="status-dot"></span>
+
+                                Registered
+
+                            </div>
+
+                        </div>
+
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <!-- EMPTY STATE -->
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    🏢
+                </div>
+
+                <h3>
+                    No Companies Registered
+                </h3>
+
+                <p>
+                    Companies that register on the
+                    placement platform will appear here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

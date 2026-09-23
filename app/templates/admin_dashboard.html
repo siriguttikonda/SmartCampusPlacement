@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | Smart Campus</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =========================================
+           ADMIN DASHBOARD
+           ========================================= */
+
+        .admin-dashboard {
+            min-height: 100vh;
+            background: var(--background);
+        }
+
+
+        /* =========================================
+           SIDEBAR
+           ========================================= */
+
+        .admin-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 250px;
+            height: 100vh;
+
+            background: #f4f7fc;
+            border-right: 1px solid #e8edf3;
+
+            padding: 28px 18px;
+
+            box-sizing: border-box;
+
+            z-index: 100;
+        }
+
+        .admin-brand {
+            padding: 0 14px 28px;
+            border-bottom: 1px solid #e8edf3;
+            margin-bottom: 22px;
+        }
+
+        .admin-brand h2 {
+            margin: 0;
+
+            font-size: 22px;
+            font-weight: 700;
+
+            color: #526078;
+        }
+
+        .admin-brand p {
+            margin: 5px 0 0;
+
+            font-size: 13px;
+
+            color: #7f8b9d;
+        }
+
+
+        /* =========================================
+           NAVIGATION
+           ========================================= */
+
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .admin-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            text-decoration: none;
+
+            color: #526078;
+
+            font-size: 14px;
+            font-weight: 500;
+
+            transition: all 0.2s ease;
+        }
+
+        .admin-nav a:hover {
+            background: #eef3fb;
+            color: #668bd8;
+            transform: translateX(2px);
+        }
+
+        .admin-nav a.active {
+            background: #eef3fb;
+            color: #668bd8;
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+
+            font-size: 17px;
+        }
+
+        .admin-logout {
+            margin-top: 25px;
+            padding-top: 22px;
+
+            border-top: 1px solid #e8edf3;
+        }
+
+        .admin-logout a {
+            color: #b87979;
+        }
+
+        .admin-logout a:hover {
+            background: #fdf3f3;
+            color: #b15f5f;
+        }
+
+
+        /* =========================================
+           MAIN CONTENT
+           ========================================= */
+
+        .admin-main {
+            margin-left: 250px;
+
+            min-height: 100vh;
+
+            padding: 38px 45px;
+
+            box-sizing: border-box;
+        }
+
+
+        /* =========================================
+           PAGE HEADER
+           ========================================= */
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 32px;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+
+            font-size: 30px;
+            font-weight: 700;
+
+            color: #3f4b5f;
+        }
+
+        .admin-header p {
+            margin: 7px 0 0;
+
+            color: #7f8b9d;
+
+            font-size: 14px;
+        }
+
+        .admin-badge {
+            padding: 9px 15px;
+
+            border-radius: 20px;
+
+            background: #f1f5ff;
+            color: #668bd8;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        /* =========================================
+           STATISTICS
+           ========================================= */
+
+        .section-title {
+            margin: 0 0 17px;
+
+            font-size: 18px;
+            font-weight: 650;
+
+            color: #4f5d73;
+        }
+
+        .stats-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 20px;
+
+            margin-bottom: 34px;
+        }
+
+        .stat-card {
+            position: relative;
+
+            background: #ffffff;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 16px;
+
+            padding: 24px;
+
+            box-shadow:
+                0 5px 18px rgba(100, 116, 139, 0.07);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 10px 25px rgba(100, 116, 139, 0.12);
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 18px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            font-weight: 500;
+
+            color: #7f8b9d;
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: #f1f5ff;
+
+            font-size: 19px;
+        }
+
+        .stat-number {
+            margin: 0;
+
+            font-size: 32px;
+            line-height: 1;
+
+            font-weight: 700;
+
+            color: #3f4b5f;
+        }
+
+
+        /* =========================================
+           APPLICATION STATUS
+           ========================================= */
+
+        .status-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, minmax(0, 1fr));
+
+            gap: 15px;
+
+            margin-bottom: 34px;
+        }
+
+        .status-card {
+            background: #ffffff;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 14px;
+
+            padding: 18px;
+
+            box-shadow:
+                0 4px 14px rgba(100, 116, 139, 0.06);
+        }
+
+        .status-label {
+            display: block;
+
+            margin-bottom: 10px;
+
+            font-size: 13px;
+
+            color: #7f8b9d;
+        }
+
+        .status-number {
+            font-size: 24px;
+            font-weight: 700;
+
+            color: #4f5d73;
+        }
+
+        .status-card.applied {
+            border-top: 3px solid #9aafd8;
+        }
+
+        .status-card.shortlisted {
+            border-top: 3px solid #91b8d8;
+        }
+
+        .status-card.interview {
+            border-top: 3px solid #d6ad6b;
+        }
+
+        .status-card.selected {
+            border-top: 3px solid #82b89a;
+        }
+
+        .status-card.rejected {
+            border-top: 3px solid #d99191;
+        }
+
+
+        /* =========================================
+           QUICK ACTIONS
+           ========================================= */
+
+        .quick-actions {
+            background: #ffffff;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 16px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 5px 18px rgba(100, 116, 139, 0.07);
+        }
+
+        .quick-actions h2 {
+            margin: 0 0 6px;
+
+            font-size: 18px;
+
+            color: #4f5d73;
+        }
+
+        .quick-actions p {
+            margin: 0 0 20px;
+
+            font-size: 14px;
+
+            color: #7f8b9d;
+        }
+
+        .action-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 15px;
+        }
+
+        .action-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+
+            padding: 17px;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 12px;
+
+            text-decoration: none;
+
+            color: #4f5d73;
+
+            background: #fbfcfe;
+
+            transition: all 0.2s ease;
+        }
+
+        .action-card:hover {
+            background: #f1f5ff;
+
+            border-color: #d9e2f5;
+
+            transform: translateY(-2px);
+        }
+
+        .action-icon {
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background: #eef3fb;
+
+            color: #668bd8;
+
+            font-size: 18px;
+        }
+
+        .action-text strong {
+            display: block;
+
+            margin-bottom: 3px;
+
+            font-size: 14px;
+        }
+
+        .action-text span {
+            font-size: 12px;
+
+            color: #7f8b9d;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+
+        @media (max-width: 1100px) {
+
+            .status-grid {
+                grid-template-columns:
+                    repeat(3, minmax(0, 1fr));
+            }
+
+            .action-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .admin-sidebar {
+                position: relative;
+
+                width: 100%;
+                height: auto;
+
+                border-right: none;
+                border-bottom: 1px solid #e8edf3;
+            }
+
+            .admin-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .admin-logout {
+                margin-top: 15px;
+            }
+
+            .admin-main {
+                margin-left: 0;
+
+                padding: 25px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .status-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+        }
+
+
+        @media (max-width: 550px) {
+
+            .admin-header {
+                align-items: flex-start;
+                flex-direction: column;
+
+                gap: 12px;
+            }
+
+            .status-grid,
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="admin-dashboard">
+
+
+    <!-- =========================================
+         SIDEBAR
+         ========================================= -->
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-brand">
+
+            <h2>Smart Campus</h2>
+
+            <p>Placement Administration</p>
+
+        </div>
+
+
+        <nav class="admin-nav">
+
+            <a href="{{ url_for('admin.dashboard') }}"
+               class="active">
+
+                <span class="nav-icon">⌂</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="{{ url_for('admin.manage_jobs') }}">
+
+                <span class="nav-icon">▣</span>
+
+                Manage Jobs
+
+            </a>
+
+
+            <a href="{{ url_for('admin.manage_students') }}">
+
+                <span class="nav-icon">♙</span>
+
+                Manage Students
+
+            </a>
+
+
+            <a href="{{ url_for('admin.applications') }}">
+
+                <span class="nav-icon">✓</span>
+
+                Applications
+
+            </a>
+
+        </nav>
+
+
+        <div class="admin-logout">
+
+            <a href="{{ url_for('auth.logout') }}">
+
+                <span class="nav-icon">↪</span>
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         MAIN CONTENT
+         ========================================= -->
+
+    <main class="admin-main">
+
+
+        <!-- PAGE HEADER -->
+
+        <header class="admin-header">
+
+            <div>
+
+                <h1>Admin Dashboard</h1>
+
+                <p>
+                    Welcome back,
+                    <strong>{{ name }}</strong>
+                </p>
+
+            </div>
+
+
+            <div class="admin-badge">
+                Administrator
+            </div>
+
+        </header>
+
+
+
+        <!-- =====================================
+             DASHBOARD STATISTICS
+             ===================================== -->
+
+        <h2 class="section-title">
+            Dashboard Overview
+        </h2>
+
+
+        <div class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        Total Students
+                    </span>
+
+                    <span class="stat-icon">
+                        👨‍🎓
+                    </span>
+
+                </div>
+
+                <p class="stat-number">
+                    {{ total_students }}
+                </p>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        Total Jobs
+                    </span>
+
+                    <span class="stat-icon">
+                        💼
+                    </span>
+
+                </div>
+
+                <p class="stat-number">
+                    {{ total_jobs }}
+                </p>
+
+            </div>
+
+
+
+            <div class="stat-card">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        Total Applications
+                    </span>
+
+                    <span class="stat-icon">
+                        📄
+                    </span>
+
+                </div>
+
+                <p class="stat-number">
+                    {{ total_applications }}
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =====================================
+             APPLICATION STATUS
+             ===================================== -->
+
+        <h2 class="section-title">
+            Application Status
+        </h2>
+
+
+        <div class="status-grid">
+
+
+            <div class="status-card applied">
+
+                <span class="status-label">
+                    Applied
+                </span>
+
+                <span class="status-number">
+                    {{ applied_count }}
+                </span>
+
+            </div>
+
+
+
+            <div class="status-card shortlisted">
+
+                <span class="status-label">
+                    Shortlisted
+                </span>
+
+                <span class="status-number">
+                    {{ shortlisted_count }}
+                </span>
+
+            </div>
+
+
+
+            <div class="status-card interview">
+
+                <span class="status-label">
+                    Interview
+                </span>
+
+                <span class="status-number">
+                    {{ interview_count }}
+                </span>
+
+            </div>
+
+
+
+            <div class="status-card selected">
+
+                <span class="status-label">
+                    Selected
+                </span>
+
+                <span class="status-number">
+                    {{ selected_count }}
+                </span>
+
+            </div>
+
+
+
+            <div class="status-card rejected">
+
+                <span class="status-label">
+                    Rejected
+                </span>
+
+                <span class="status-number">
+                    {{ rejected_count }}
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =====================================
+             QUICK ACTIONS
+             ===================================== -->
+
+        <section class="quick-actions">
+
+            <h2>
+                Quick Actions
+            </h2>
+
+            <p>
+                Manage placement activities from here.
+            </p>
+
+
+            <div class="action-grid">
+
+
+                <a class="action-card"
+                   href="{{ url_for('admin.manage_jobs') }}">
+
+                    <span class="action-icon">
+                        💼
+                    </span>
+
+                    <span class="action-text">
+
+                        <strong>
+                            Manage Jobs
+                        </strong>
+
+                        <span>
+                            Add, edit or remove jobs
+                        </span>
+
+                    </span>
+
+                </a>
+
+
+
+                <a class="action-card"
+                   href="{{ url_for('admin.manage_students') }}">
+
+                    <span class="action-icon">
+                        👨‍🎓
+                    </span>
+
+                    <span class="action-text">
+
+                        <strong>
+                            Manage Students
+                        </strong>
+
+                        <span>
+                            View student profiles
+                        </span>
+
+                    </span>
+
+                </a>
+
+
+
+                <a class="action-card"
+                   href="{{ url_for('admin.applications') }}">
+
+                    <span class="action-icon">
+                        📋
+                    </span>
+
+                    <span class="action-text">
+
+                        <strong>
+                            View Applications
+                        </strong>
+
+                        <span>
+                            Review student applications
+                        </span>
+
+                    </span>
+
+                </a>
+
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

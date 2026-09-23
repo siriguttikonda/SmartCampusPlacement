@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Skills | Smart Campus</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+    <style>
+    /* =========================
+       STUDENT SIDEBAR
+       ========================= */
+
+    .sidebar {
+        background: #ffffff;
+        color: #1e293b;
+        border-right: 1px solid #e2e8f0;
+    }
+
+    .sidebar h2 {
+        color: #1e293b;
+    }
+
+    .sidebar a {
+        color: #64748b;
+    }
+
+    .sidebar a:hover {
+        background: #f5f7ff;
+        color: #4f5fc7;
+    }
+
+    .sidebar a.active {
+        background: #eef1ff;
+        color: #4f5fc7;
+    }
+
+    .sidebar .logout {
+        color: #d95c5c;
+    }
+
+    .sidebar .logout:hover {
+        background: #fcecec;
+        color: #c94d4d;
+    }
+
+
+    /* =========================
+       SKILL PAGE CARDS
+       ========================= */
+
+    .card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 2px 6px rgba(51, 65, 85, 0.04);
+    }
+
+
+    /* =========================
+       ADD SKILL ICON
+       ========================= */
+
+    .menu-icon {
+        background: #eef1ff;
+        color: #5b6ee1;
+    }
+
+
+    /* =========================
+       SKILL INPUT
+       ========================= */
+
+    .skill-input-container label {
+        display: block;
+        margin-bottom: 7px;
+        color: #475569;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    #skillInput:focus {
+        border-color: #5b6ee1;
+        box-shadow: 0 0 0 3px rgba(91, 110, 225, 0.12);
+    }
+
+
+    /* =========================
+       SKILL TAGS
+       ========================= */
+
+    .skill-tag {
+        background: #eef1ff;
+        color: #4f5fc7;
+        border: 1px solid #d8def9;
+    }
+
+    .delete-skill-button {
+        color: #d95c5c;
+    }
+
+    .delete-skill-button:hover {
+        background: #fcecec;
+        color: #c94d4d;
+    }
+
+
+    /* =========================
+       ADD BUTTON
+       ========================= */
+
+    .btn {
+        background: #5b6ee1;
+    }
+
+    .btn:hover {
+        background: #4f5fc7;
+        box-shadow: 0 4px 10px rgba(91, 110, 225, 0.18);
+    }
+
+
+    /* =========================
+       INFO BADGE
+       ========================= */
+
+    .badge-info {
+        background: #eef1ff;
+        color: #4f5fc7;
+    }
+
+
+    /* =========================
+       EMPTY STATE
+       ========================= */
+
+    .empty-state-icon {
+        background: #f1f3f9;
+        color: #718096;
+    }
+
+
+    /* =========================
+       CAREER TIP
+       ========================= */
+
+    .career-tip-icon {
+        background: #fff6df;
+    }
+
+
+    /* =========================
+       BACK LINK
+       ========================= */
+
+    .back-link {
+        color: #718096;
+    }
+
+    .back-link:hover {
+        color: #5b6ee1;
+    }
+</style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         SIDEBAR
+         ========================= -->
+
+    <div class="sidebar">
+
+        <h2>Smart Campus</h2>
+
+
+        <a href="{{ url_for('student.dashboard') }}">
+            <span>▦</span>&nbsp; Dashboard
+        </a>
+
+
+        <a href="{{ url_for('student.profile') }}">
+            <span>👤</span>&nbsp; My Profile
+        </a>
+
+
+        <a
+            href="{{ url_for('student.skills') }}"
+            class="active"
+        >
+            <span>⚙</span>&nbsp; My Skills
+        </a>
+
+
+        <a href="{{ url_for('student.jobs') }}">
+            <span>💼</span>&nbsp; Job Opportunities
+        </a>
+
+
+        <a href="{{ url_for('student.recommended_jobs') }}">
+            <span>★</span>&nbsp; Recommended Jobs
+        </a>
+
+
+        <a href="{{ url_for('student.my_applications') }}">
+            <span>▤</span>&nbsp; My Applications
+        </a>
+
+
+        <a href="{{ url_for('student.skill_gap') }}">
+            <span>◈</span>&nbsp; Skill Gap Analysis
+        </a>
+
+
+        <a
+            href="{{ url_for('auth.logout') }}"
+            class="logout"
+        >
+            <span>↪</span>&nbsp; Logout
+        </a>
+
+    </div>
+
+
+
+    <!-- =========================
+         MAIN CONTENT
+         ========================= -->
+
+    <main class="main-content">
+
+
+        <!-- HEADER -->
+
+        <div class="header">
+
+            <div>
+
+                <h1>
+                    My Skills
+                </h1>
+
+                <div>
+                    Build your technical profile for better job matching.
+                </div>
+
+            </div>
+
+
+            <div>
+
+                Welcome,
+                <strong>{{ session.get("user_name") }}</strong>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================
+             ADD SKILL CARD
+             ========================= -->
+
+        <section class="card">
+
+
+            <div class="flex-between">
+
+                <div>
+
+                    <h2 class="mt-0 mb-1">
+                        Add a Skill
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Add technical skills that represent your experience.
+                    </p>
+
+                </div>
+
+
+                <div class="menu-icon">
+                    +
+                </div>
+
+            </div>
+
+
+            <div class="divider"></div>
+
+
+            <div class="skill-input-container">
+
+                <label for="skillInput">
+                    Search for a skill
+                </label>
+
+
+                <input
+                    type="text"
+                    id="skillInput"
+                    placeholder="e.g. Python, React, MySQL..."
+                    autocomplete="off"
+                >
+
+
+                <div
+                    id="suggestions"
+                    class="suggestions"
+                ></div>
+
+            </div>
+
+
+            <div style="margin-top: 15px;">
+
+                <button
+                    type="button"
+                    class="btn"
+                    onclick="addSkill()"
+                >
+                    + Add Skill
+                </button>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================
+             CURRENT SKILLS
+             ========================= -->
+
+        <section
+            class="card"
+            style="margin-top: 22px;"
+        >
+
+
+            <div class="flex-between">
+
+                <div>
+
+                    <h2 class="mt-0 mb-1">
+                        Your Skills
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Skills currently included in your profile.
+                    </p>
+
+                </div>
+
+
+                {% if skills %}
+
+                    <span class="badge badge-info">
+                        {{ skills|length }} Skills
+                    </span>
+
+                {% endif %}
+
+
+            </div>
+
+
+            <div class="divider"></div>
+
+
+            {% if skills %}
+
+
+                <div
+                    id="skillsList"
+                    class="skills-list"
+                >
+
+                    {% for skill in skills %}
+
+                        <span class="skill-tag">
+
+                            {{ skill.skill_name }}
+
+
+                            <form
+                                method="POST"
+                                action="{{ url_for('student.delete_skill', skill_id=skill.id) }}"
+                                style="display: inline;"
+                            >
+
+                                <button
+                                    type="submit"
+                                    class="delete-skill-button"
+                                    title="Remove {{ skill.skill_name }}"
+                                    onclick="return confirm('Remove this skill from your profile?');"
+                                >
+                                    ×
+                                </button>
+
+                            </form>
+
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="empty-state">
+
+                    <div class="empty-state-icon">
+                        ⚙
+                    </div>
+
+                    <h3>
+                        No skills added yet
+                    </h3>
+
+                    <p>
+                        Add your technical skills above to improve job recommendations.
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </section>
+
+
+
+        <!-- =========================
+             CAREER TIP
+             ========================= -->
+
+        <section
+            class="card"
+            style="margin-top: 22px;"
+        >
+
+            <div class="flex" style="align-items: flex-start; gap: 14px;">
+
+                <div
+                    style="
+                        width: 40px;
+                        height: 40px;
+                        flex-shrink: 0;
+                        border-radius: 10px;
+                        background: #fef3c7;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    "
+                >
+                    💡
+                </div>
+
+
+                <div>
+
+                    <h3 class="mt-0 mb-1">
+                        Improve your job matches
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Add the technologies and tools you actually know.
+                        Your skills are used when identifying relevant opportunities.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- BACK -->
+
+        <div style="margin-top: 22px;">
+
+            <a
+                href="{{ url_for('student.dashboard') }}"
+                class="back-link"
+            >
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+
+    </main>
+
+
+
+    <!-- =========================
+         JAVASCRIPT
+         ========================= -->
+
+    <script
+        src="{{ url_for('static', filename='js/script.js') }}"
+    ></script>
+
+
+</body>
+
+</html>

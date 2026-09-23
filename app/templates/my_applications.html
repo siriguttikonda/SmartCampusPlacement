@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Applications - Smart Campus</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =========================================================
+           MY APPLICATIONS
+           Student Light Theme
+           Appearance + current application status model
+           ========================================================= */
+
+
+        /* =========================================================
+           SIDEBAR
+           ========================================================= */
+
+        .sidebar {
+            background: #ffffff;
+            color: #1e293b;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .sidebar h2 {
+            color: #1e293b;
+        }
+
+        .sidebar a {
+            color: #64748b;
+        }
+
+        .sidebar a:hover {
+            background: #f5f7ff;
+            color: #4f5fc7;
+        }
+
+        .sidebar a.active {
+            background: #eef1ff;
+            color: #4f5fc7;
+        }
+
+        .sidebar .logout,
+        .sidebar .logout-link {
+            color: #d95c5c;
+        }
+
+        .sidebar .logout:hover,
+        .sidebar .logout-link:hover {
+            background: #fcecec;
+            color: #c94d4d;
+        }
+
+
+        /* =========================================================
+           HEADER
+           ========================================================= */
+
+        .top-header {
+            margin-bottom: 22px;
+        }
+
+        .top-header h1 {
+            color: #1e293b;
+        }
+
+        .header-subtitle {
+            color: #718096;
+        }
+
+
+        /* =========================================================
+           SUMMARY
+           ========================================================= */
+
+        .applications-summary {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+
+            margin-bottom: 22px;
+            padding: 20px 22px;
+
+            background: #ffffff;
+
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+
+            box-shadow:
+                0 2px 6px rgba(51, 65, 85, 0.04);
+        }
+
+        .summary-icon {
+            width: 48px;
+            height: 48px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: #eef1ff;
+            color: #5b6ee1;
+
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .applications-summary h2 {
+            margin: 0 0 5px;
+
+            color: #1e293b;
+
+            font-size: 17px;
+        }
+
+        .applications-summary p {
+            margin: 0;
+
+            color: #718096;
+
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .applications-summary strong {
+            color: #4f5fc7;
+        }
+
+
+        /* =========================================================
+           APPLICATION CARD
+           ========================================================= */
+
+        .application-card {
+            background: #ffffff;
+
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+
+            box-shadow:
+                0 2px 6px rgba(51, 65, 85, 0.04);
+
+            transition: 0.2s ease;
+        }
+
+        .application-card:hover {
+            border-color: #cfd6f5;
+
+            box-shadow:
+                0 10px 25px rgba(51, 65, 85, 0.07);
+
+            transform: translateY(-2px);
+        }
+
+
+        /* =========================================================
+           APPLICATION HEADER
+           ========================================================= */
+
+        .application-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 16px;
+        }
+
+        .application-company {
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+
+            min-width: 0;
+        }
+
+        .company-avatar {
+            width: 48px;
+            height: 48px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            background: #eef1ff;
+            color: #5b6ee1;
+
+            font-size: 19px;
+            font-weight: 700;
+        }
+
+        .application-company h2 {
+            margin: 0 0 4px;
+
+            color: #1e293b;
+
+            font-size: 18px;
+        }
+
+        .application-company p {
+            margin: 0;
+
+            color: #718096;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           STATUS BADGES
+           ========================================================= */
+
+        .badge.success {
+            background: #e8f7ef;
+            color: #18794e;
+
+            border: 1px solid #cceedd;
+        }
+
+        .badge.info {
+            background: #eef1ff;
+            color: #4f5fc7;
+
+            border: 1px solid #d8def9;
+        }
+
+        .badge.warning {
+            background: #fff6df;
+            color: #8a681f;
+
+            border: 1px solid #f3e5bd;
+        }
+
+        .badge.danger {
+            background: #fcecec;
+            color: #c94d4d;
+
+            border: 1px solid #f2d1d1;
+        }
+
+        .badge.neutral {
+            background: #f1f3f9;
+            color: #64748b;
+
+            border: 1px solid #e2e6ee;
+        }
+
+
+        /* =========================================================
+           APPLICATION DETAILS
+           ========================================================= */
+
+        .application-details {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 12px;
+
+            margin-top: 20px;
+        }
+
+        .application-detail {
+            padding: 13px;
+
+            background: #f7f8fc;
+
+            border: 1px solid #edf0f5;
+            border-radius: 10px;
+        }
+
+        .detail-label {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: #718096;
+
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .application-detail strong {
+            display: block;
+
+            color: #334155;
+
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+
+        /* =========================================================
+           STATUS SECTION
+           ========================================================= */
+
+        .application-status-section {
+            margin-top: 20px;
+        }
+
+        .status-message {
+            display: flex;
+            align-items: flex-start;
+
+            gap: 12px;
+
+            padding: 15px 16px;
+
+            border-radius: 12px;
+        }
+
+        .status-icon {
+            width: 34px;
+            height: 34px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 9px;
+
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .status-message strong {
+            display: block;
+
+            margin-bottom: 3px;
+
+            font-size: 13px;
+        }
+
+        .status-message p {
+            margin: 0;
+
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+
+        /* =========================================================
+           SELECTED
+           ========================================================= */
+
+        .success-message {
+            background: #f1faf5;
+            border: 1px solid #d9eee2;
+        }
+
+        .success-message .status-icon {
+            background: #e8f7ef;
+            color: #18794e;
+        }
+
+        .success-message strong {
+            color: #18794e;
+        }
+
+        .success-message p {
+            color: #547765;
+        }
+
+
+        /* =========================================================
+           SHORTLISTED
+           ========================================================= */
+
+        .info-message {
+            background: #f5f6ff;
+            border: 1px solid #e0e4fb;
+        }
+
+        .info-message .status-icon {
+            background: #eef1ff;
+            color: #5b6ee1;
+        }
+
+        .info-message strong {
+            color: #4f5fc7;
+        }
+
+        .info-message p {
+            color: #66708b;
+        }
+
+
+        /* =========================================================
+           INTERVIEW
+           ========================================================= */
+
+        .warning-message {
+            background: #fffbf1;
+            border: 1px solid #f3e8c9;
+        }
+
+        .warning-message .status-icon {
+            background: #fff6df;
+            color: #8a681f;
+        }
+
+        .warning-message strong {
+            color: #80611d;
+        }
+
+        .warning-message p {
+            color: #7b6d49;
+        }
+
+
+        /* =========================================================
+           REJECTED
+           ========================================================= */
+
+        .danger-message {
+            background: #fff6f6;
+            border: 1px solid #f2dede;
+        }
+
+        .danger-message .status-icon {
+            background: #fcecec;
+            color: #c94d4d;
+        }
+
+        .danger-message strong {
+            color: #c94d4d;
+        }
+
+        .danger-message p {
+            color: #806666;
+        }
+
+
+        /* =========================================================
+           APPLIED / UNDER REVIEW / FORWARDED
+           ========================================================= */
+
+        .neutral-message {
+            background: #f8f9fc;
+            border: 1px solid #e7eaf0;
+        }
+
+        .neutral-message .status-icon {
+            background: #f1f3f9;
+            color: #718096;
+        }
+
+        .neutral-message strong {
+            color: #475569;
+        }
+
+        .neutral-message p {
+            color: #718096;
+        }
+
+
+        /* =========================================================
+           EMPTY STATE
+           ========================================================= */
+
+        .empty-state {
+            background: #ffffff;
+
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+
+            box-shadow:
+                0 2px 6px rgba(51, 65, 85, 0.04);
+        }
+
+        .empty-state-icon {
+            background: #f1f3f9;
+            color: #718096;
+        }
+
+
+        /* =========================================================
+           CAREER TIP
+           ========================================================= */
+
+        .career-tip {
+            display: flex;
+            align-items: flex-start;
+
+            gap: 13px;
+
+            margin-top: 22px;
+            padding: 16px 18px;
+
+            background: #fff6df;
+
+            border: 1px solid #f3e5bd;
+            border-radius: 14px;
+        }
+
+        .career-tip-icon {
+            width: 38px;
+            height: 38px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #fff0c7;
+
+            border-radius: 10px;
+        }
+
+        .career-tip strong {
+            color: #795b18;
+
+            font-size: 13px;
+        }
+
+        .career-tip p {
+            margin: 4px 0 0;
+
+            color: #806b3c;
+
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+
+        /* =========================================================
+           MOBILE
+           ========================================================= */
+
+        @media (max-width: 900px) {
+
+            .application-details {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .applications-summary {
+                align-items: flex-start;
+            }
+
+            .application-card-header {
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+            .application-details {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         SIDEBAR
+         ========================================================= -->
+
+    <aside class="sidebar">
+
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                SC
+            </div>
+
+            <div>
+
+                <div class="brand-name">
+                    Smart Campus
+                </div>
+
+                <div class="brand-subtitle">
+                    Career Portal
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+
+            <!-- Dashboard -->
+
+            <a href="{{ url_for('student.dashboard') }}"
+               class="sidebar-link">
+
+                <span class="menu-icon">⌂</span>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <!-- Profile -->
+
+            <a href="{{ url_for('student.profile') }}"
+               class="sidebar-link">
+
+                <span class="menu-icon">◉</span>
+
+                <span>
+                    My Profile
+                </span>
+
+            </a>
+
+
+            <!-- Skills -->
+
+            <a href="{{ url_for('student.skills') }}"
+               class="sidebar-link">
+
+                <span class="menu-icon">◆</span>
+
+                <span>
+                    My Skills
+                </span>
+
+            </a>
+
+
+            <!-- Job Opportunities -->
+
+            <a href="{{ url_for('student.jobs') }}"
+               class="sidebar-link">
+
+                <span class="menu-icon">▣</span>
+
+                <span>
+                    Job Opportunities
+                </span>
+
+            </a>
+
+
+            <!-- Recommended Jobs -->
+
+            <a href="{{ url_for('student.recommended_jobs') }}"
+               class="sidebar-link">
+
+                <span class="menu-icon">★</span>
+
+                <span>
+                    Recommended Jobs
+                </span>
+
+            </a>
+
+
+            <!-- My Applications -->
+
+            <a href="{{ url_for('student.my_applications') }}"
+               class="sidebar-link active">
+
+                <span class="menu-icon">✓</span>
+
+                <span>
+                    My Applications
+                </span>
+
+            </a>
+
+
+            <!-- Skill Gap -->
+
+            <a href="{{ url_for('student.skill_gap') }}"
+               class="sidebar-link">
+
+                <span class="menu-icon">↗</span>
+
+                <span>
+                    Skill Gap
+                </span>
+
+            </a>
+
+
+        </nav>
+
+
+        <!-- Logout -->
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('auth.logout') }}"
+               class="sidebar-link logout-link">
+
+                <span class="menu-icon">↪</span>
+
+                <span>
+                    Logout
+                </span>
+
+            </a>
+
+        </div>
+
+
+    </aside>
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+         ========================================================= -->
+
+    <main class="main-content">
+
+
+        <!-- HEADER -->
+
+        <header class="top-header">
+
+            <div>
+
+                <h1>
+                    My Applications
+                </h1>
+
+                <p class="header-subtitle">
+                    Track your job applications and their progress
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             APPLICATIONS
+             ===================================================== -->
+
+        {% if applications %}
+
+
+            <!-- SUMMARY -->
+
+            <section class="section-card applications-summary">
+
+
+                <div class="summary-icon">
+                    ✓
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        Application Tracker
+                    </h2>
+
+                    <p>
+
+                        You have submitted
+
+                        <strong>
+                            {{ applications|length }}
+                        </strong>
+
+                        application{% if applications|length != 1 %}s{% endif %}.
+
+                    </p>
+
+                </div>
+
+
+            </section>
+
+
+            <!-- =================================================
+                 APPLICATION LIST
+                 ================================================= -->
+
+            <div class="application-list">
+
+
+                {% for application in applications %}
+
+
+                    <article class="application-card">
+
+
+                        <!-- =================================================
+                             APPLICATION HEADER
+                             ================================================= -->
+
+                        <div class="application-card-header">
+
+
+                            <div class="application-company">
+
+
+                                <div class="company-avatar">
+
+                                    {{ application.job.company.company_name[0]|upper
+                                       if application.job.company
+                                       else "C" }}
+
+                                </div>
+
+
+                                <div>
+
+                                    <h2>
+                                        {{ application.job.job_title }}
+                                    </h2>
+
+
+                                    <p>
+
+                                        {{ application.job.company.company_name
+                                           if application.job.company
+                                           else "Company" }}
+
+                                    </p>
+
+                                </div>
+
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 CURRENT STATUS
+                                 ================================================= -->
+
+                            {% if application.company_status == "Selected" %}
+
+
+                                <span class="badge success">
+                                    ✓ Selected
+                                </span>
+
+
+                            {% elif application.company_status == "Rejected" %}
+
+
+                                <span class="badge danger">
+                                    ✕ Rejected
+                                </span>
+
+
+                            {% elif application.company_status == "Interview" %}
+
+
+                                <span class="badge warning">
+                                    ● Interview
+                                </span>
+
+
+                            {% elif application.company_status == "Shortlisted" %}
+
+
+                                <span class="badge info">
+                                    ★ Shortlisted
+                                </span>
+
+
+                            {% elif application.faculty_status == "Forwarded" %}
+
+
+                                <span class="badge info">
+                                    → Forwarded to Company
+                                </span>
+
+
+                            {% elif application.faculty_status == "Verified" %}
+
+
+                                <span class="badge info">
+                                    ✓ Verified
+                                </span>
+
+
+                            {% elif application.faculty_status == "Under Review" %}
+
+
+                                <span class="badge warning">
+                                    ◷ Under Review
+                                </span>
+
+
+                            {% elif application.faculty_status == "Not Eligible" %}
+
+
+                                <span class="badge danger">
+                                    ✕ Not Eligible
+                                </span>
+
+
+                            {% else %}
+
+
+                                <span class="badge neutral">
+                                    ◷ Applied
+                                </span>
+
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                        <!-- =================================================
+                             APPLICATION DETAILS
+                             ================================================= -->
+
+                        <div class="application-details">
+
+
+                            <!-- Location -->
+
+                            <div class="application-detail">
+
+                                <span class="detail-label">
+                                    Location
+                                </span>
+
+                                <strong>
+                                    📍 {{ application.job.location }}
+                                </strong>
+
+                            </div>
+
+
+                            <!-- Job Type -->
+
+                            <div class="application-detail">
+
+                                <span class="detail-label">
+                                    Job Type
+                                </span>
+
+                                <strong>
+                                    💼 {{ application.job.job_type }}
+                                </strong>
+
+                            </div>
+
+
+                            <!-- Applied Date -->
+
+                            <div class="application-detail">
+
+                                <span class="detail-label">
+                                    Applied On
+                                </span>
+
+                                <strong>
+
+                                    {% if application.application_date %}
+
+                                        {{ application.application_date.strftime("%d-%m-%Y") }}
+
+                                    {% else %}
+
+                                        —
+
+                                    {% endif %}
+
+                                </strong>
+
+                            </div>
+
+
+                            <!-- Current Status -->
+
+                            <div class="application-detail">
+
+                                <span class="detail-label">
+                                    Current Status
+                                </span>
+
+                                <strong>
+
+
+                                    {% if application.company_status %}
+
+                                        {{ application.company_status }}
+
+                                    {% else %}
+
+                                        {{ application.faculty_status }}
+
+                                    {% endif %}
+
+
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <!-- =================================================
+                             STATUS MESSAGE
+                             ================================================= -->
+
+                        <div class="application-status-section">
+
+
+                            <!-- SELECTED -->
+
+                            {% if application.company_status == "Selected" %}
+
+
+                                <div class="status-message success-message">
+
+
+                                    <span class="status-icon">
+                                        ✓
+                                    </span>
+
+
+                                    <div>
+
+                                        <strong>
+                                            Congratulations!
+                                        </strong>
+
+                                        <p>
+                                            Your application has been selected by the company.
+                                        </p>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            <!-- SHORTLISTED -->
+
+                            {% elif application.company_status == "Shortlisted" %}
+
+
+                                <div class="status-message info-message">
+
+
+                                    <span class="status-icon">
+                                        ★
+                                    </span>
+
+
+                                    <div>
+
+                                        <strong>
+                                            You have been shortlisted
+                                        </strong>
+
+                                        <p>
+                                            Your application has moved to the company's next stage.
+                                        </p>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            <!-- INTERVIEW -->
+
+                            {% elif application.company_status == "Interview" %}
+
+
+                                <div class="status-message warning-message">
+
+
+                                    <span class="status-icon">
+                                        ●
+                                    </span>
+
+
+                                    <div>
+
+                                        <strong>
+                                            Interview stage
+                                        </strong>
+
+                                        <p>
+                                            Your application is currently in the interview stage.
+                                        </p>
+
+
+                                        {% if application.interview_date %}
+
+                                            <p style="margin-top: 5px;">
+
+                                                Interview Date:
+
+                                                <strong>
+                                                    {{ application.interview_date.strftime("%d-%m-%Y %I:%M %p") }}
+                                                </strong>
+
+                                            </p>
+
+                                        {% endif %}
+
+
+                                    </div>
+
+
+                                </div>
+
+
+                            <!-- REJECTED -->
+
+                            {% elif application.company_status == "Rejected" %}
+
+
+                                <div class="status-message danger-message">
+
+
+                                    <span class="status-icon">
+                                        ✕
+                                    </span>
+
+
+                                    <div>
+
+                                        <strong>
+                                            Application closed
+                                        </strong>
+
+                                        <p>
+                                            This application was not selected for the current opportunity.
+                                        </p>
+
+
+                                        {% if application.remarks %}
+
+                                            <p style="margin-top: 5px;">
+
+                                                Remarks:
+
+                                                {{ application.remarks }}
+
+                                            </p>
+
+                                        {% endif %}
+
+
+                                    </div>
+
+
+                                </div>
+
+
+                            <!-- FORWARDED -->
+
+                            {% elif application.faculty_status == "Forwarded" %}
+
+
+                                <div class="status-message info-message">
+
+
+                                    <span class="status-icon">
+                                        →
+                                    </span>
+
+
+                                    <div>
+
+                                        <strong>
+                                            Application forwarded to company
+                                        </strong>
+
+                                        <p>
+                                            Your application has been verified and forwarded to the recruiting company.
+                                        </p>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            <!-- VERIFIED -->
+
+                            {% elif application.faculty_status == "Verified" %}
+
+
+                                <div class="status-message info-message">
+
+
+                                    <span class="status-icon">
+                                        ✓
+                                    </span>
+
+
+                                    <div>
+
+                                        <strong>
+                                            Profile verified
+                                        </strong>
+
+                                        <p>
+                                            Your application has passed the placement cell verification stage.
+                                        </p>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            <!-- UNDER REVIEW -->
+
+                            {% elif application.faculty_status == "Under Review" %}
+
+
+                                <div class="status-message warning-message">
+
+
+                                    <span class="status-icon">
+                                        ◷
+                                    </span>
+
+
+                                    <div>
+
+                                        <strong>
+                                            Application under review
+                                        </strong>
+
+                                        <p>
+                                            The placement cell is currently reviewing your application.
+                                        </p>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            <!-- NOT ELIGIBLE -->
+
+                            {% elif application.faculty_status == "Not Eligible" %}
+
+
+                                <div class="status-message danger-message">
+
+
+                                    <span class="status-icon">
+                                        ✕
+                                    </span>
+
+
+                                    <div>
+
+                                        <strong>
+                                            Not eligible
+                                        </strong>
+
+                                        <p>
+                                            Your application does not meet the eligibility requirements for this opportunity.
+                                        </p>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            <!-- APPLIED -->
+
+                            {% else %}
+
+
+                                <div class="status-message neutral-message">
+
+
+                                    <span class="status-icon">
+                                        ◷
+                                    </span>
+
+
+                                    <div>
+
+                                        <strong>
+                                            Application submitted
+                                        </strong>
+
+                                        <p>
+                                            Your application has been submitted and is awaiting placement cell review.
+                                        </p>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                    </article>
+
+
+                {% endfor %}
+
+
+            </div>
+
+
+        <!-- =====================================================
+             EMPTY STATE
+             ===================================================== -->
+
+        {% else %}
+
+
+            <section class="empty-state">
+
+
+                <div class="empty-state-icon">
+                    ✓
+                </div>
+
+
+                <h2>
+                    No applications yet
+                </h2>
+
+
+                <p>
+                    You haven't applied for any jobs yet.
+                    Explore available opportunities and start
+                    building your career.
+                </p>
+
+
+                <a href="{{ url_for('student.jobs') }}"
+                   class="btn btn-primary">
+
+                    Browse Job Opportunities
+
+                    <span>
+                        →
+                    </span>
+
+                </a>
+
+
+            </section>
+
+
+        {% endif %}
+
+
+        <!-- =====================================================
+             CAREER TIP
+             ===================================================== -->
+
+        <section class="career-tip">
+
+
+            <div class="career-tip-icon">
+                💡
+            </div>
+
+
+            <div>
+
+                <strong>
+                    Career Tip
+                </strong>
+
+
+                <p>
+                    Keep checking your application status.
+                    Recruiters may update your application as
+                    you move through the placement process.
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</body>
+
+</html>

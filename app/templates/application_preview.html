@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Application Preview</title>
+</head>
+
+<body>
+
+    <h1>Application Preview</h1>
+
+    <hr>
+
+    <h2>Student Details</h2>
+
+    <p>
+        <strong>Name:</strong>
+        {{ session.get("user_name") }}
+    </p>
+
+    <p>
+        <strong>Student ID:</strong>
+        {{ student.student_id }}
+    </p>
+
+    <p>
+        <strong>Department:</strong>
+        {{ student.department }}
+    </p>
+
+    <p>
+        <strong>Course:</strong>
+        {{ student.course }}
+    </p>
+
+    <p>
+        <strong>Graduation Year:</strong>
+        {{ student.graduation_year }}
+    </p>
+
+    <p>
+        <strong>10th Percentage:</strong>
+        {{ student.tenth_percentage }}
+    </p>
+
+    <p>
+        <strong>12th Percentage:</strong>
+        {{ student.twelfth_percentage }}
+    </p>
+
+    <p>
+        <strong>Current CGPA:</strong>
+        {{ student.current_cgpa }}
+    </p>
+
+    <p>
+        <strong>Active Backlogs:</strong>
+        {{ student.active_backlogs }}
+    </p>
+
+    <hr>
+
+    <h2>Job Details</h2>
+
+    <p>
+        <strong>Job Title:</strong>
+        {{ job.job_title }}
+    </p>
+
+    <p>
+        <strong>Company:</strong>
+        {{ job.company_name }}
+    </p>
+
+    <p>
+        <strong>Location:</strong>
+        {{ job.location }}
+    </p>
+
+    <p>
+        <strong>Job Type:</strong>
+        {{ job.job_type }}
+    </p>
+
+    <p>
+        <strong>Required Skills:</strong>
+        {{ job.required_skills }}
+    </p>
+
+    <hr>
+
+    <h3>Ready to apply?</h3>
+
+    <form
+        action="{{ url_for('student.confirm_application', job_id=job.id) }}"
+        method="POST"
+    >
+
+        <button type="submit">
+            Confirm Apply
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="{{ url_for('student.recommended_jobs') }}">
+        ← Back to Recommended Jobs
+    </a>
+
+</body>
+
+</html>

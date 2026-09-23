@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Job | Smart Campus</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+
+        /* =========================================
+           PAGE
+           ========================================= */
+
+        .admin-page {
+            min-height: 100vh;
+            background: var(--background);
+        }
+
+
+        /* =========================================
+           SIDEBAR
+           ========================================= */
+
+        .admin-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+
+            width: 250px;
+            height: 100vh;
+
+            background: #f4f7fc;
+            border-right: 1px solid #e8edf3;
+
+            padding: 28px 18px;
+
+            box-sizing: border-box;
+
+            z-index: 100;
+        }
+
+        .admin-brand {
+            padding: 0 14px 28px;
+
+            border-bottom: 1px solid #e8edf3;
+
+            margin-bottom: 22px;
+        }
+
+        .admin-brand h2 {
+            margin: 0;
+
+            font-size: 22px;
+            font-weight: 700;
+
+            color: #526078;
+        }
+
+        .admin-brand p {
+            margin: 5px 0 0;
+
+            font-size: 13px;
+
+            color: #7f8b9d;
+        }
+
+
+        /* =========================================
+           NAVIGATION
+           ========================================= */
+
+        .admin-nav {
+            display: flex;
+            flex-direction: column;
+
+            gap: 7px;
+        }
+
+        .admin-nav a,
+        .admin-logout a {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 12px 14px;
+
+            border-radius: 10px;
+
+            text-decoration: none;
+
+            color: #526078;
+
+            font-size: 14px;
+            font-weight: 500;
+
+            transition: all 0.2s ease;
+        }
+
+        .admin-nav a:hover,
+        .admin-logout a:hover {
+            background: #eef3fb;
+            color: #668bd8;
+
+            transform: translateX(2px);
+        }
+
+        .admin-nav a.active {
+            background: #eef3fb;
+
+            color: #668bd8;
+
+            font-weight: 600;
+        }
+
+        .nav-icon {
+            width: 20px;
+
+            text-align: center;
+
+            font-size: 17px;
+        }
+
+        .admin-logout {
+            margin-top: 25px;
+
+            padding-top: 22px;
+
+            border-top: 1px solid #e8edf3;
+        }
+
+        .admin-logout a {
+            color: #b87979;
+        }
+
+        .admin-logout a:hover {
+            background: #fdf3f3;
+            color: #b15f5f;
+        }
+
+
+        /* =========================================
+           MAIN
+           ========================================= */
+
+        .admin-main {
+            margin-left: 250px;
+
+            min-height: 100vh;
+
+            padding: 38px 45px;
+
+            box-sizing: border-box;
+        }
+
+
+        /* =========================================
+           HEADER
+           ========================================= */
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .back-link {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            margin-bottom: 18px;
+
+            color: #668bd8;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            text-decoration: none;
+
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #526fae;
+        }
+
+        .page-header h1 {
+            margin: 0 0 7px;
+
+            font-size: 30px;
+            font-weight: 700;
+
+            color: #3f4b5f;
+        }
+
+        .page-header p {
+            margin: 0;
+
+            color: #7f8b9d;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================================
+           FORM CARD
+           ========================================= */
+
+        .edit-card {
+            max-width: 950px;
+
+            background: #ffffff;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 16px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 5px 18px rgba(100, 116, 139, 0.07);
+        }
+
+
+        /* =========================================
+           FORM
+           ========================================= */
+
+        .edit-form {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 21px 24px;
+        }
+
+        .form-group {
+            display: flex;
+
+            flex-direction: column;
+
+            min-width: 0;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label,
+        .form-section-title {
+            margin-bottom: 7px;
+
+            color: #526078;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="date"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+
+            box-sizing: border-box;
+
+            padding: 11px 13px;
+
+            border: 1px solid #dfe6ef;
+
+            border-radius: 9px;
+
+            background: #fbfcfe;
+
+            color: #3f4b5f;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group input[type="date"]:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #a9bce5;
+
+            background: #ffffff;
+
+            box-shadow:
+                0 0 0 3px #f1f5ff;
+        }
+
+        .form-group textarea {
+            min-height: 130px;
+
+            resize: vertical;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================================
+           CHECKBOX SECTIONS
+           ========================================= */
+
+        .checkbox-section {
+            grid-column: 1 / -1;
+
+            padding: 18px;
+
+            border: 1px solid #edf0f4;
+
+            border-radius: 12px;
+
+            background: #fbfcfe;
+        }
+
+        .checkbox-section > label:first-child {
+            display: block;
+
+            margin-bottom: 13px;
+
+            color: #526078;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .checkbox-grid {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 9px;
+        }
+
+        .checkbox-option {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 8px 11px;
+
+            border: 1px solid #e3e8ef;
+
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            color: #68758a;
+
+            font-size: 12px;
+
+            cursor: pointer;
+
+            transition: all 0.2s ease;
+        }
+
+        .checkbox-option:hover {
+            background: #f1f5ff;
+
+            border-color: #dbe4f4;
+
+            color: #668bd8;
+        }
+
+        .checkbox-option input {
+            width: 14px;
+            height: 14px;
+
+            margin: 0;
+
+            accent-color: #7c9fe6;
+
+            cursor: pointer;
+        }
+
+
+        /* =========================================
+           FORM HINT
+           ========================================= */
+
+        .form-hint {
+            margin: 7px 0 0;
+
+            color: #9aa4b3;
+
+            font-size: 11px;
+
+            line-height: 1.4;
+        }
+
+
+        /* =========================================
+           ACTIONS
+           ========================================= */
+
+        .form-actions {
+            grid-column: 1 / -1;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding-top: 5px;
+
+            border-top: 1px solid #edf0f4;
+
+            margin-top: 4px;
+        }
+
+        .update-btn {
+            border: none;
+
+            border-radius: 9px;
+
+            padding: 12px 22px;
+
+            background: #7c9fe6;
+
+            color: #ffffff;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: all 0.2s ease;
+        }
+
+        .update-btn:hover {
+            background: #668bd8;
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 5px 14px rgba(124, 159, 230, 0.22);
+        }
+
+        .cancel-btn {
+            padding: 11px 18px;
+
+            border: 1px solid #e0e6ee;
+
+            border-radius: 9px;
+
+            background: #ffffff;
+
+            color: #708099;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            text-decoration: none;
+
+            transition: all 0.2s ease;
+        }
+
+        .cancel-btn:hover {
+            background: #f5f7fb;
+
+            color: #526078;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+
+        @media (max-width: 800px) {
+
+            .admin-sidebar {
+                position: relative;
+
+                width: 100%;
+                height: auto;
+
+                border-right: none;
+
+                border-bottom: 1px solid #e8edf3;
+            }
+
+            .admin-nav {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .admin-main {
+                margin-left: 0;
+
+                padding: 25px 20px;
+            }
+
+            .edit-form {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width,
+            .checkbox-section,
+            .form-actions {
+                grid-column: auto;
+            }
+
+        }
+
+
+        @media (max-width: 550px) {
+
+            .edit-card {
+                padding: 20px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+            .update-btn,
+            .cancel-btn {
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="admin-page">
+
+
+    <!-- =========================================
+         SIDEBAR
+         ========================================= -->
+
+    <aside class="admin-sidebar">
+
+        <div class="admin-brand">
+
+            <h2>Smart Campus</h2>
+
+            <p>Placement Administration</p>
+
+        </div>
+
+
+        <nav class="admin-nav">
+
+            <a href="{{ url_for('admin.dashboard') }}">
+
+                <span class="nav-icon">⌂</span>
+
+                Dashboard
+
+            </a>
+
+
+            <a href="{{ url_for('admin.manage_jobs') }}"
+               class="active">
+
+                <span class="nav-icon">▣</span>
+
+                Manage Jobs
+
+            </a>
+
+
+            <a href="{{ url_for('admin.manage_students') }}">
+
+                <span class="nav-icon">♙</span>
+
+                Manage Students
+
+            </a>
+
+
+            <a href="{{ url_for('admin.applications') }}">
+
+                <span class="nav-icon">✓</span>
+
+                Applications
+
+            </a>
+
+        </nav>
+
+
+        <div class="admin-logout">
+
+            <a href="{{ url_for('auth.logout') }}">
+
+                <span class="nav-icon">↪</span>
+
+                Logout
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =========================================
+         MAIN CONTENT
+         ========================================= -->
+
+    <main class="admin-main">
+
+
+        <!-- HEADER -->
+
+        <header class="page-header">
+
+            <a
+                href="{{ url_for('admin.manage_jobs') }}"
+                class="back-link"
+            >
+                ← Back to Manage Jobs
+            </a>
+
+
+            <h1>
+                Edit Job
+            </h1>
+
+
+            <p>
+                Update the details and eligibility requirements
+                for this placement opportunity.
+            </p>
+
+        </header>
+
+
+
+        <!-- =====================================
+             EDIT FORM
+             ===================================== -->
+
+        <section class="edit-card">
+
+
+            <form method="POST"
+                  class="edit-form">
+
+
+                <!-- COMPANY -->
+
+                <div class="form-group">
+
+                    <label>
+                        Company Name
+                    </label>
+
+                    <input
+                        type="text"
+                        name="company_name"
+                        value="{{ job.company_name }}"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- JOB TITLE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Job Title
+                    </label>
+
+                    <input
+                        type="text"
+                        name="job_title"
+                        value="{{ job.job_title }}"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- LOCATION -->
+
+                <div class="form-group">
+
+                    <label>
+                        Location
+                    </label>
+
+                    <select
+                        name="location"
+                        required
+                    >
+
+                        {% for location in [
+
+                            "Chennai",
+                            "Hyderabad",
+                            "Bangalore",
+                            "Mumbai",
+                            "Pune",
+                            "Delhi",
+                            "Kolkata",
+                            "Remote"
+
+                        ] %}
+
+                            <option
+                                value="{{ location }}"
+                                {% if job.location == location %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                {{ location }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- JOB TYPE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Job Type
+                    </label>
+
+                    <select
+                        name="job_type"
+                        required
+                    >
+
+                        {% for job_type in [
+
+                            "Full Time",
+                            "Part Time",
+                            "Internship"
+
+                        ] %}
+
+                            <option
+                                value="{{ job_type }}"
+                                {% if job.job_type == job_type %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                {{ job_type }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- CGPA -->
+
+                <div class="form-group">
+
+                    <label>
+                        Minimum CGPA
+                    </label>
+
+                    <input
+                        type="number"
+                        name="minimum_cgpa"
+                        min="0"
+                        max="10"
+                        step="0.1"
+                        value="{{ job.minimum_cgpa or '' }}"
+                    >
+
+                    <p class="form-hint">
+                        Leave empty if there is no CGPA requirement.
+                    </p>
+
+                </div>
+
+
+
+                <!-- DEADLINE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Application Deadline
+                    </label>
+
+                    <input
+                        type="date"
+                        name="deadline"
+                        value="{{ job.deadline.strftime('%Y-%m-%d') if job.deadline else '' }}"
+                    >
+
+                </div>
+
+
+
+                <!-- GRADUATION YEARS -->
+
+                <div class="checkbox-section">
+
+                    <label>
+                        Eligible Graduation Years
+                    </label>
+
+
+                    {% set selected_years =
+                        job.graduation_year.split(',')
+                        if job.graduation_year
+                        else []
+                    %}
+
+
+                    <div class="checkbox-grid">
+
+                        {% for year in range(2023, 2030) %}
+
+                            <label class="checkbox-option">
+
+                                <input
+                                    type="checkbox"
+                                    name="graduation_year"
+                                    value="{{ year }}"
+                                    {% if year|string in selected_years %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                {{ year }}
+
+                            </label>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <p class="form-hint">
+                        Select all graduation years eligible for this job.
+                    </p>
+
+                </div>
+
+
+
+                <!-- REQUIRED SKILLS -->
+
+                <div class="checkbox-section">
+
+                    <label>
+                        Required Skills
+                    </label>
+
+
+                    {% set selected_skills =
+                        job.required_skills.lower().replace(' ', '').split(',')
+                        if job.required_skills
+                        else []
+                    %}
+
+
+                    <div class="checkbox-grid">
+
+                        {% for skill in [
+
+                            "Python",
+                            "Java",
+                            "C",
+                            "C++",
+                            "JavaScript",
+                            "HTML",
+                            "CSS",
+                            "MySQL",
+                            "MongoDB",
+                            "Flask",
+                            "Django",
+                            "Git",
+                            "Data Structures",
+                            "Machine Learning",
+                            "Artificial Intelligence",
+                            "Data Analysis",
+                            "React",
+                            "Node.js"
+
+                        ] %}
+
+                            <label class="checkbox-option">
+
+                                <input
+                                    type="checkbox"
+                                    name="required_skills"
+                                    value="{{ skill }}"
+                                    {% if skill.lower().replace(' ', '') in selected_skills %}
+                                        checked
+                                    {% endif %}
+                                >
+
+                                {{ skill }}
+
+                            </label>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <p class="form-hint">
+                        Select the skills students should have for this role.
+                    </p>
+
+                </div>
+
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="form-group full-width">
+
+                    <label>
+                        Description
+                    </label>
+
+                    <textarea
+                        name="description"
+                        rows="5"
+                    >{{ job.description or '' }}</textarea>
+
+                </div>
+
+
+
+                <!-- ACTIONS -->
+
+                <div class="form-actions">
+
+                    <button
+                        type="submit"
+                        class="update-btn"
+                    >
+                        Update Job
+                    </button>
+
+
+                    <a
+                        href="{{ url_for('admin.manage_jobs') }}"
+                        class="cancel-btn"
+                    >
+                        Cancel
+                    </a>
+
+                </div>
+
+
+            </form>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

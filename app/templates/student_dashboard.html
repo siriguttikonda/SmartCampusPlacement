@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Dashboard | Smart Campus</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+
+    <style>
+
+        /* =========================================================
+           STUDENT DASHBOARD
+           ========================================================= */
+
+        .sidebar {
+            background: #ffffff;
+            color: #1e293b;
+            border-right: 1px solid #e2e8f0;
+        }
+
+        .sidebar h2 {
+            color: #1e293b;
+        }
+
+        .sidebar a {
+            color: #64748b;
+        }
+
+        .sidebar a:hover {
+            background: #f5f7ff;
+            color: #4f5fc7;
+        }
+
+        .sidebar a.active {
+            background: #eef1ff;
+            color: #4f5fc7;
+        }
+
+        .sidebar .logout {
+            color: #d95c5c;
+        }
+
+        .sidebar .logout:hover {
+            background: #fcecec;
+            color: #c94d4d;
+        }
+
+
+        /* =========================================================
+           WELCOME BANNER
+           ========================================================= */
+
+        .dashboard-welcome {
+            background: linear-gradient(
+                135deg,
+                #eef1ff,
+                #e8edff
+            );
+
+            color: #1e293b;
+            border: 1px solid #dfe5ff;
+            border-radius: 18px;
+
+            padding: 30px;
+            margin-bottom: 28px;
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-welcome::after {
+            content: "";
+
+            position: absolute;
+
+            width: 220px;
+            height: 220px;
+
+            border-radius: 50%;
+
+            background: rgba(91, 110, 225, 0.08);
+
+            right: -60px;
+            top: -70px;
+        }
+
+        .dashboard-welcome h2 {
+            margin: 0 0 8px;
+
+            font-size: 25px;
+
+            color: #1e293b;
+
+            position: relative;
+            z-index: 1;
+        }
+
+        .dashboard-welcome p {
+            margin: 0;
+
+            color: #64748b;
+
+            font-size: 14px;
+
+            position: relative;
+            z-index: 1;
+        }
+
+
+        /* =========================================================
+           SECTION TITLE
+           ========================================================= */
+
+        .dashboard-section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 16px;
+        }
+
+        .dashboard-section-title h2 {
+            margin: 0;
+
+            font-size: 19px;
+
+            color: #1e293b;
+        }
+
+        .dashboard-section-title span {
+            color: #718096;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           OVERVIEW CARDS
+           ========================================================= */
+
+        .overview-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 16px;
+
+            margin-bottom: 28px;
+        }
+
+        .overview-card {
+            background: #ffffff;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 10px 25px
+                rgba(51, 65, 85, 0.07);
+        }
+
+        .overview-icon {
+            width: 44px;
+            height: 44px;
+
+            border-radius: 12px;
+
+            background: #eef1ff;
+
+            color: #5b6ee1;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 20px;
+
+            flex-shrink: 0;
+        }
+
+        .overview-info {
+            min-width: 0;
+        }
+
+        .overview-info h3 {
+            margin: 0 0 4px;
+
+            font-size: 24px;
+
+            color: #1e293b;
+        }
+
+        .overview-info p {
+            margin: 0;
+
+            font-size: 12px;
+
+            color: #718096;
+        }
+
+
+        /* =========================================================
+           PROFILE SNAPSHOT
+           ========================================================= */
+
+        .profile-snapshot {
+            background: #ffffff;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 16px;
+
+            padding: 20px 22px;
+
+            margin-bottom: 28px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+
+            gap: 16px;
+        }
+
+        .profile-avatar {
+            width: 48px;
+            height: 48px;
+
+            border-radius: 14px;
+
+            background: #eef1ff;
+
+            color: #5b6ee1;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+        }
+
+        .profile-details h3 {
+            margin: 0 0 5px;
+
+            font-size: 16px;
+
+            color: #1e293b;
+        }
+
+        .profile-details p {
+            margin: 0;
+
+            color: #718096;
+
+            font-size: 13px;
+        }
+
+        .profile-action {
+            text-decoration: none;
+
+            background: #5b6ee1;
+
+            color: white;
+
+            padding: 10px 16px;
+
+            border-radius: 9px;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            transition: background 0.2s ease;
+        }
+
+        .profile-action:hover {
+            background: #4f5fc7;
+        }
+
+
+        /* =========================================================
+           PLACEMENT STATUS
+           ========================================================= */
+
+        .placement-status {
+            background: #ffffff;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 16px;
+
+            padding: 22px;
+
+            margin-bottom: 28px;
+        }
+
+        .placement-status-content {
+            display: flex;
+            align-items: center;
+
+            gap: 16px;
+        }
+
+        .placement-status-icon {
+            width: 44px;
+            height: 44px;
+
+            border-radius: 12px;
+
+            background: #eef1ff;
+
+            color: #5b6ee1;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 20px;
+
+            flex-shrink: 0;
+        }
+
+        .placement-status h3 {
+            margin: 0 0 5px;
+
+            font-size: 16px;
+
+            color: #1e293b;
+        }
+
+        .placement-status p {
+            margin: 0;
+
+            color: #718096;
+
+            font-size: 13px;
+        }
+
+        .status-badge {
+            margin-left: auto;
+
+            padding: 8px 14px;
+
+            border-radius: 20px;
+
+            background: #fff6df;
+
+            color: #c98a2e;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            white-space: nowrap;
+        }
+
+        .status-badge.selected {
+            background: #e8f7ef;
+
+            color: #22a06b;
+        }
+
+
+        /* =========================================================
+           CAREER SERVICES
+           ========================================================= */
+
+        .student-menu {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 18px;
+        }
+
+        .menu-card {
+            background: white;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 16px;
+
+            padding: 22px;
+
+            min-height: 190px;
+
+            display: flex;
+            flex-direction: column;
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+
+            border-color: #cfd6f5;
+
+            box-shadow:
+                0 12px 30px
+                rgba(51, 65, 85, 0.08);
+        }
+
+        .menu-icon {
+            width: 44px;
+            height: 44px;
+
+            border-radius: 12px;
+
+            background: #eef1ff;
+
+            color: #5b6ee1;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 21px;
+
+            margin-bottom: 16px;
+        }
+
+        .menu-card h3 {
+            margin: 0 0 8px;
+
+            font-size: 17px;
+
+            color: #1e293b;
+        }
+
+        .menu-card p {
+            margin: 0;
+
+            color: #718096;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        .menu-card-action {
+            margin-top: auto;
+
+            padding-top: 18px;
+        }
+
+        .menu-card-action a {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            color: #5b6ee1;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            text-decoration: none;
+        }
+
+        .menu-card-action a:hover {
+            color: #4f5fc7;
+        }
+
+
+        /* =========================================================
+           CAREER TIP
+           ========================================================= */
+
+        .dashboard-tip {
+            margin-top: 28px;
+
+            background: white;
+
+            border: 1px solid #e2e8f0;
+
+            border-radius: 16px;
+
+            padding: 20px 22px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+        }
+
+        .tip-icon {
+            width: 40px;
+            height: 40px;
+
+            flex-shrink: 0;
+
+            border-radius: 10px;
+
+            background: #fff6df;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 19px;
+        }
+
+        .dashboard-tip h4 {
+            margin: 0 0 4px;
+
+            font-size: 14px;
+
+            color: #1e293b;
+        }
+
+        .dashboard-tip p {
+            margin: 0;
+
+            color: #718096;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+           ========================================================= */
+
+        @media (max-width: 1100px) {
+
+            .overview-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .student-menu {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+        }
+
+
+        @media (max-width: 700px) {
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .student-menu {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-snapshot {
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+            .placement-status-content {
+                align-items: flex-start;
+            }
+
+            .status-badge {
+                margin-left: 0;
+            }
+
+            .dashboard-welcome {
+                padding: 24px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+         SIDEBAR
+         ========================================================= -->
+
+    <div class="sidebar">
+
+        <h2>Smart Campus</h2>
+
+
+        <a
+            href="{{ url_for('student.dashboard') }}"
+            class="active"
+        >
+            <span>▦</span>&nbsp; Dashboard
+        </a>
+
+
+        <a href="{{ url_for('student.profile') }}">
+            <span>👤</span>&nbsp; My Profile
+        </a>
+
+
+        <a href="{{ url_for('student.skills') }}">
+            <span>⚙</span>&nbsp; My Skills
+        </a>
+
+
+        <a href="{{ url_for('student.jobs') }}">
+            <span>💼</span>&nbsp; Job Opportunities
+        </a>
+
+
+        <a href="{{ url_for('student.recommended_jobs') }}">
+            <span>★</span>&nbsp; Recommended Jobs
+        </a>
+
+
+        <a href="{{ url_for('student.my_applications') }}">
+            <span>▤</span>&nbsp; My Applications
+        </a>
+
+
+        <a href="{{ url_for('student.skill_gap') }}">
+            <span>◈</span>&nbsp; Skill Gap Analysis
+        </a>
+
+
+        <a
+            href="{{ url_for('auth.logout') }}"
+            class="logout"
+        >
+            <span>↪</span>&nbsp; Logout
+        </a>
+
+    </div>
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+         ========================================================= -->
+
+    <main class="main-content">
+
+
+        <!-- =====================================================
+             HEADER
+             ===================================================== -->
+
+        <div class="header">
+
+            <div>
+
+                <h1>
+                    Student Dashboard
+                </h1>
+
+                <div>
+                    Manage your career journey from one place.
+                </div>
+
+            </div>
+
+
+            <div>
+
+                Welcome back,
+                <strong>{{ name }}</strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             WELCOME
+             ===================================================== -->
+
+        <section class="dashboard-welcome">
+
+            <h2>
+                Welcome, {{ name }} 👋
+            </h2>
+
+            <p>
+                Explore opportunities, build your profile,
+                track applications, and prepare for your next
+                career move.
+            </p>
+
+        </section>
+
+
+        <!-- =====================================================
+             DASHBOARD OVERVIEW
+             ===================================================== -->
+
+        <div class="dashboard-section-title">
+
+            <h2>
+                Dashboard Overview
+            </h2>
+
+            <span>
+                Your placement activity
+            </span>
+
+        </div>
+
+
+        <div class="overview-grid">
+
+
+            <!-- APPLICATIONS -->
+
+            <div class="overview-card">
+
+                <div class="overview-icon">
+                    ▤
+                </div>
+
+                <div class="overview-info">
+
+                    <h3>
+                        {{ total_applications }}
+                    </h3>
+
+                    <p>
+                        Applications
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SHORTLISTED -->
+
+            <div class="overview-card">
+
+                <div class="overview-icon">
+                    ★
+                </div>
+
+                <div class="overview-info">
+
+                    <h3>
+                        {{ shortlisted_count }}
+                    </h3>
+
+                    <p>
+                        Shortlisted
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- INTERVIEWS -->
+
+            <div class="overview-card">
+
+                <div class="overview-icon">
+                    🎤
+                </div>
+
+                <div class="overview-info">
+
+                    <h3>
+                        {{ interview_count }}
+                    </h3>
+
+                    <p>
+                        Interviews
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SELECTED -->
+
+            <div class="overview-card">
+
+                <div class="overview-icon">
+                    🏆
+                </div>
+
+                <div class="overview-info">
+
+                    <h3>
+                        {{ selected_count }}
+                    </h3>
+
+                    <p>
+                        Selected
+                    </p>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =====================================================
+             PROFILE SNAPSHOT
+             ===================================================== -->
+
+        <div class="profile-snapshot">
+
+            <div class="profile-info">
+
+                <div class="profile-avatar">
+                    👤
+                </div>
+
+                <div class="profile-details">
+
+                    <h3>
+                        {{ student.course or "Course not added" }}
+                    </h3>
+
+                    <p>
+
+                        Student ID:
+                        {{ student.student_id or "Not added" }}
+
+                        &nbsp; • &nbsp;
+
+                        {{ student.department or "Department not added" }}
+
+                        &nbsp; • &nbsp;
+
+                        Graduation:
+                        {{ student.graduation_year or "Not added" }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <a
+                href="{{ url_for('student.profile') }}"
+                class="profile-action"
+            >
+                View Profile
+            </a>
+
+        </div>
+
+
+        <!-- =====================================================
+             PLACEMENT STATUS
+             ===================================================== -->
+
+        <div class="dashboard-section-title">
+
+            <h2>
+                Placement Status
+            </h2>
+
+            <span>
+                Current recruitment status
+            </span>
+
+        </div>
+
+
+        <div class="placement-status">
+
+            <div class="placement-status-content">
+
+                <div class="placement-status-icon">
+                    🏆
+                </div>
+
+
+                <div>
+
+                    <h3>
+                        Placement Status
+                    </h3>
+
+                    {% if placement_status == "Selected" %}
+
+                        <p>
+                            Congratulations! You have been selected
+                            through the placement process.
+                        </p>
+
+                    {% else %}
+
+                        <p>
+                            Keep exploring suitable opportunities
+                            and applying to eligible jobs.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                {% if placement_status == "Selected" %}
+
+                    <div class="status-badge selected">
+                        Selected
+                    </div>
+
+                {% else %}
+
+                    <div class="status-badge">
+                        Not Placed
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             CAREER SERVICES
+             ===================================================== -->
+
+        <div class="dashboard-section-title">
+
+            <h2>
+                Career Services
+            </h2>
+
+            <span>
+                Everything you need for placement
+            </span>
+
+        </div>
+
+
+        <div class="student-menu">
+
+
+            <!-- =================================================
+                 MY PROFILE
+                 ================================================= -->
+
+            <div class="menu-card">
+
+                <div class="menu-icon">
+                    👤
+                </div>
+
+                <h3>
+                    My Profile
+                </h3>
+
+                <p>
+                    Keep your personal information and
+                    academic details updated.
+                </p>
+
+                <div class="menu-card-action">
+
+                    <a href="{{ url_for('student.profile') }}">
+                        Open Profile →
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 MY SKILLS
+                 ================================================= -->
+
+            <div class="menu-card">
+
+                <div class="menu-icon">
+                    ⚙
+                </div>
+
+                <h3>
+                    My Skills
+                </h3>
+
+                <p>
+                    Add your technical skills and keep
+                    your professional profile up to date.
+                </p>
+
+                <div class="menu-card-action">
+
+                    <a href="{{ url_for('student.skills') }}">
+                        Manage Skills →
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 JOB OPPORTUNITIES
+                 ================================================= -->
+
+            <div class="menu-card">
+
+                <div class="menu-icon">
+                    💼
+                </div>
+
+                <h3>
+                    Job Opportunities
+                </h3>
+
+                <p>
+                    Browse available jobs and placement
+                    opportunities posted by companies.
+                </p>
+
+                <div class="menu-card-action">
+
+                    <a href="{{ url_for('student.jobs') }}">
+                        Explore Jobs →
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 RECOMMENDED JOBS
+                 ================================================= -->
+
+            <div class="menu-card">
+
+                <div class="menu-icon">
+                    ★
+                </div>
+
+                <h3>
+                    Recommended Jobs
+                </h3>
+
+                <p>
+                    Discover opportunities that match
+                    your eligibility and skills.
+                </p>
+
+                <div class="menu-card-action">
+
+                    <a href="{{ url_for('student.recommended_jobs') }}">
+                        View Recommendations →
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 MY APPLICATIONS
+                 ================================================= -->
+
+            <div class="menu-card">
+
+                <div class="menu-icon">
+                    ▤
+                </div>
+
+                <h3>
+                    My Applications
+                </h3>
+
+                <p>
+                    Track submitted applications and
+                    monitor your placement progress.
+                </p>
+
+                <div class="menu-card-action">
+
+                    <a href="{{ url_for('student.my_applications') }}">
+                        Track Applications →
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 SKILL GAP
+                 ================================================= -->
+
+            <div class="menu-card">
+
+                <div class="menu-icon">
+                    ◈
+                </div>
+
+                <h3>
+                    Skill Gap Analysis
+                </h3>
+
+                <p>
+                    Identify missing skills and understand
+                    what you need to improve for jobs.
+                </p>
+
+                <div class="menu-card-action">
+
+                    <a href="{{ url_for('student.skill_gap') }}">
+                        Analyze Skills →
+                    </a>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =====================================================
+             CAREER TIP
+             ===================================================== -->
+
+        <div class="dashboard-tip">
+
+            <div class="tip-icon">
+                💡
+            </div>
+
+            <div>
+
+                <h4>
+                    Career Tip
+                </h4>
+
+                <p>
+                    Keep your profile and skills updated
+                    to receive more relevant job recommendations.
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+</body>
+
+</html>

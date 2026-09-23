@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Company Profile | Smart Campus</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="sidebar-header">
+            <h2>Smart Campus</h2>
+            <p>Placement Portal</p>
+        </div>
+
+        <nav class="nav">
+
+            <a href="{{ url_for('company.dashboard') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('company.jobs') }}">
+                Jobs
+            </a>
+
+            <a href="{{ url_for('company.candidates') }}">
+                Candidates
+            </a>
+
+            <a href="{{ url_for('company.interviews') }}">
+                Interviews
+            </a>
+
+            <a href="{{ url_for('company.profile') }}"
+               class="active">
+                Company Profile
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="{{ url_for('auth.logout') }}">
+                Logout
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+
+            <div>
+                <h1>Company Profile</h1>
+                <p>Manage your company information</p>
+            </div>
+
+            <div class="topbar-user">
+                <div class="user-avatar">
+                    {{ company.company_name[0]|upper }}
+                </div>
+
+                <div>
+                    <strong>{{ company.company_name }}</strong>
+                    <span>Recruiter</span>
+                </div>
+            </div>
+
+        </header>
+
+
+        <!-- PROFILE CONTENT -->
+        <section class="content-section">
+
+            <div class="profile-card">
+
+                <div class="profile-card-header">
+
+                    <div>
+                        <h2>Company Information</h2>
+                        <p>
+                            Keep your company details up to date.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <form method="POST">
+
+                    <div class="form-grid">
+
+                        <!-- COMPANY NAME -->
+                        <div class="form-group">
+
+                            <label for="company_name">
+                                Company Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="company_name"
+                                name="company_name"
+                                value="{{ company.company_name or '' }}"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- INDUSTRY -->
+                        <div class="form-group">
+
+                            <label for="industry">
+                                Industry
+                            </label>
+
+                            <input
+                                type="text"
+                                id="industry"
+                                name="industry"
+                                value="{{ company.industry or '' }}"
+                                placeholder="e.g. Information Technology"
+                            >
+
+                        </div>
+
+
+                        <!-- WEBSITE -->
+                        <div class="form-group">
+
+                            <label for="website">
+                                Website
+                            </label>
+
+                            <input
+                                type="url"
+                                id="website"
+                                name="website"
+                                value="{{ company.website or '' }}"
+                                placeholder="https://example.com"
+                            >
+
+                        </div>
+
+
+                        <!-- LOCATION -->
+                        <div class="form-group">
+
+                            <label for="location">
+                                Location
+                            </label>
+
+                            <input
+                                type="text"
+                                id="location"
+                                name="location"
+                                value="{{ company.location or '' }}"
+                                placeholder="e.g. Hyderabad"
+                            >
+
+                        </div>
+
+
+                        <!-- CONTACT EMAIL -->
+                        <div class="form-group">
+
+                            <label for="contact_email">
+                                Contact Email
+                            </label>
+
+                            <input
+                                type="email"
+                                id="contact_email"
+                                name="contact_email"
+                                value="{{ company.contact_email or '' }}"
+                                placeholder="hr@example.com"
+                            >
+
+                        </div>
+
+
+                        <!-- CONTACT PHONE -->
+                        <div class="form-group">
+
+                            <label for="contact_phone">
+                                Contact Phone
+                            </label>
+
+                            <input
+                                type="text"
+                                id="contact_phone"
+                                name="contact_phone"
+                                value="{{ company.contact_phone or '' }}"
+                                placeholder="Contact number"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+                    <div class="form-group full-width">
+
+                        <label for="description">
+                            Company Description
+                        </label>
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="6"
+                            placeholder="Tell students about your company..."
+                        >{{ company.description or '' }}</textarea>
+
+                    </div>
+
+
+                    <!-- ACTIONS -->
+                    <div class="form-actions">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary">
+                            Save Changes
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login | Smart Campus</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+    margin: 0;
+
+    min-height: 100vh;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    background-image:
+    linear-gradient(
+        rgba(245, 248, 252, 0.25),
+        rgba(245, 248, 252, 0.32)
+    ),
+    url("/static/images/login-bg.png");
+
+background-size: cover;
+background-position: center;
+background-attachment: fixed;
+
+    color: #526078;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px;
+}
+
+
+        /* =========================================
+           MAIN CONTAINER
+           ========================================= */
+
+        .login-container {
+            width: 100%;
+            max-width: 950px;
+
+            min-height: 560px;
+
+            background: #ffffff;
+
+            border: 1px solid #e8edf3;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            box-shadow:
+                0 12px 35px rgba(100, 116, 139, 0.10);
+        }
+
+
+        /* =========================================
+           LEFT SIDE
+           ========================================= */
+
+        .login-intro {
+            background: #f1f5ff;
+
+            padding: 55px 45px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .brand-icon {
+            width: 52px;
+            height: 52px;
+
+            border-radius: 14px;
+
+            background: #dce7fb;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #668bd8;
+
+            font-size: 24px;
+            font-weight: 700;
+
+            margin-bottom: 25px;
+        }
+
+        .login-intro h1 {
+            margin: 0 0 12px;
+
+            font-size: 31px;
+
+            line-height: 1.2;
+
+            color: #3f4b5f;
+
+            font-weight: 700;
+        }
+
+        .login-intro h1 span {
+            color: #668bd8;
+        }
+
+        .login-intro p {
+            margin: 0;
+
+            max-width: 380px;
+
+            font-size: 15px;
+
+            line-height: 1.7;
+
+            color: #7b8799;
+        }
+
+
+        /* =========================================
+           FEATURES
+           ========================================= */
+
+        .feature-list {
+            margin-top: 30px;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 14px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            font-size: 13px;
+
+            color: #65738a;
+        }
+
+        .feature-icon {
+            width: 30px;
+            height: 30px;
+
+            flex-shrink: 0;
+
+            border-radius: 8px;
+
+            background: #ffffff;
+
+            border: 1px solid #e1e8f3;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #7c9fe6;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================================
+           RIGHT SIDE
+           ========================================= */
+
+        .login-form-area {
+            padding: 55px 50px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header {
+            margin-bottom: 30px;
+        }
+
+        .form-header h2 {
+            margin: 0 0 7px;
+
+            color: #3f4b5f;
+
+            font-size: 25px;
+
+            font-weight: 700;
+        }
+
+        .form-header p {
+            margin: 0;
+
+            color: #8a95a5;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================================
+           FORM
+           ========================================= */
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+
+            color: #526078;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border: 1px solid #dfe6ef;
+
+            border-radius: 9px;
+
+            background: #fbfcfe;
+
+            color: #3f4b5f;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #a9bce5;
+
+            background: #ffffff;
+
+            box-shadow:
+                0 0 0 3px #f1f5ff;
+        }
+
+        .form-group input::placeholder {
+            color: #a5aebb;
+        }
+
+
+        /* =========================================
+           LOGIN BUTTON
+           ========================================= */
+
+        .login-button {
+            width: 100%;
+
+            margin-top: 5px;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #7c9fe6;
+
+            color: #ffffff;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: all 0.2s ease;
+        }
+
+        .login-button:hover {
+            background: #668bd8;
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 6px 15px rgba(124, 159, 230, 0.22);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+
+        /* =========================================
+           REGISTER
+           ========================================= */
+
+        .register-text {
+            margin: 24px 0 0;
+
+            text-align: center;
+
+            color: #8a95a5;
+
+            font-size: 13px;
+        }
+
+        .register-text a {
+            color: #668bd8;
+
+            font-weight: 600;
+
+            text-decoration: none;
+        }
+
+        .register-text a:hover {
+            text-decoration: underline;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+
+        @media (max-width: 750px) {
+
+            .login-container {
+                grid-template-columns: 1fr;
+
+                max-width: 500px;
+            }
+
+            .login-intro {
+                padding: 35px 30px;
+            }
+
+            .login-intro h1 {
+                font-size: 27px;
+            }
+
+            .feature-list {
+                margin-top: 22px;
+            }
+
+            .login-form-area {
+                padding: 35px 30px;
+            }
+
+        }
+
+
+        @media (max-width: 450px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .login-container {
+                border-radius: 15px;
+            }
+
+            .login-intro {
+                padding: 30px 24px;
+            }
+
+            .login-form-area {
+                padding: 30px 24px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="login-container">
+
+
+        <!-- =====================================
+             LEFT INTRODUCTION
+             ===================================== -->
+
+        <section class="login-intro">
+
+            <div class="brand-icon">
+                SC
+            </div>
+
+            <h1>
+                Welcome to
+                <span>Smart Campus</span>
+            </h1>
+
+            <p>
+                Your campus career and placement platform.
+                Connect with opportunities, manage your profile,
+                and take the next step toward your career.
+            </p>
+
+
+            <div class="feature-list">
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ✓
+                    </div>
+
+                    <span>
+                        Discover placement opportunities
+                    </span>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ✓
+                    </div>
+
+                    <span>
+                        Track your applications
+                    </span>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ✓
+                    </div>
+
+                    <span>
+                        Identify your skill gaps
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =====================================
+             LOGIN FORM
+             ===================================== -->
+
+        <section class="login-form-area">
+
+
+            <div class="form-header">
+
+                <h2>
+                    Sign in
+                </h2>
+
+                <p>
+                    Enter your credentials to continue.
+                </p>
+
+            </div>
+
+
+            <form
+                method="POST"
+                class="login-form"
+            >
+
+
+                <div class="form-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter your password"
+                        required
+                    >
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+                    Sign In
+                </button>
+
+
+            </form>
+
+
+            <p class="register-text">
+
+                Don't have an account?
+
+                <a href="{{ url_for('auth.register') }}">
+                    Create an account
+                </a>
+
+            </p>
+
+
+        </section>
+
+
+    </div>
+
+
+</body>
+
+</html>
