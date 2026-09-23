@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 
@@ -25,12 +25,9 @@ def create_app():
     app.register_blueprint(admin_bp)
     app.register_blueprint(company_bp)
 
+    # Homepage → Login page
     @app.route("/")
     def home():
-        try:
-            with db.engine.connect():
-                return "Flask is successfully connected to MySQL!"
-        except Exception as e:
-            return f"Database connection failed: {str(e)}"
+        return redirect(url_for("auth.login"))
 
     return app
